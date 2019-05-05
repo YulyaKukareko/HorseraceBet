@@ -1,20 +1,30 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import './resources/css/signin.css';
+import SignIn from './components/SignIn';
+import SignUp from './components/SignUp';
+import Main from './containers/Main';
+
 class App extends Component {
 
-    componentDidMount() {
-        axios.get("http://localhost:8080/server_war/hello");
+    constructor(props){
+        super(props);
+        this.state = {
+            defaultFlag: "US"
+        }
     }
+
+    changeDefaultFlag = (codeCountry) => {
+        this.setState({defaultFlag: codeCountry});
+    };
 
     render() {
         return (
-            <div>
-                <header >
-                    <p>
-                        Edit <code>src/App.js</code> asd
-                    </p>
-                </header>
-            </div>
+            <Router basename={"/server_war"}>
+                <Route path={"/auth"} render={(props) => <Main {...props} defaultFlag={this.state.defaultFlag} changeDefaultFlag={this.changeDefaultFlag}/>} />
+                <Route path={"/signup"} render={(props) => <SignUp {...props} defaultFlag={this.state.defaultFlag} changeDefaultFlag={this.changeDefaultFlag}/>} />
+                <Route exact path={"/"} render={(props) => <SignIn {...props} defaultFlag={this.state.defaultFlag} changeDefaultFlag={this.changeDefaultFlag}/>} />
+            </Router>
         );
     }
 }
