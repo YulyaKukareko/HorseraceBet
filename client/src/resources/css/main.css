@@ -1,0 +1,793 @@
+html {
+    -ms-overflow-style: scrollbar;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.sDvMenuTrackListContent {
+    float: left;
+    margin-left: 2vw;
+    width: 14%;
+    border-left: solid 1px #ccc;
+    border-right: solid 1px #ccc;
+}
+
+.sDvRaceInformationHeader {
+    float: left;
+    background-color: #1360a0;
+    padding-bottom: 1vw;
+    margin-left: 2vw;
+    color: #fff;
+    width: 80%;
+}
+
+#dvPools {
+    padding-top: 10px;
+    padding-left: 7px;
+}
+
+#dvPools > div > div:not(#dvParlayFinish):not(#dvParlayCancel):not(.sDvPoolTypeParlay) {
+    border: solid 1px #777;
+    border-radius: 3px;
+    -webkit-transition: all 0.2s linear 0s;
+    -moz-transition: all 0.2s linear 0s;
+    -ms-transition: all 0.2s linear 0s;
+}
+
+#dvPools > div > div:not(#dvParlayFinish):not(#dvParlayCancel) {
+    display: inline-block;
+    line-height: 25px;
+    width: 100px;
+    height: 25px;
+    font-size: 12px;
+    text-align: center;
+    text-transform: uppercase;
+    margin-right: 5px;
+    margin-top: 5px;
+    cursor: pointer !important;
+    background-color: #fff;
+}
+
+#dvPools > div > div:not(.sDvParlayOptionDisable) * {
+    cursor: pointer !important;
+}
+
+#dvPools input {
+    display: none;
+}
+
+.sDvMenuTrackListHeader {
+    height: 2vw;
+    background-color: #1672bd;
+    color: white;
+    text-align: center;
+    font-weight: 700;
+}
+
+.sTrackSelected, .sTrackSelected:hover {
+    color: #fff;
+    background-color: #44abff !important;
+}
+
+.sDvInputPoolChecked * {
+    color: #fff !important;
+}
+
+.sDvInputPoolChecked * {
+    color: #fff !important;
+}
+
+.sTdDescriptionPool {
+    padding-top: 5px;
+    padding-left: 7px;
+}
+
+.sSpDescriptionPool, .sSpDescriptionResult {
+    font-size: 13px;
+}
+
+.sTdDescriptionPool {
+    padding-top: 20px;
+    padding-left: 7px;
+    line-height: 29px;
+    padding-bottom: 4vw;
+}
+
+#dvPools > div > div:not(.sDvParlayOptionDisable):not(.sDvPoolTypeParlay):hover {
+    background-color: #2387d3 !important;
+    color: #fff;
+    border-color: #2387d3 !important;
+}
+
+.edit_result {
+    width: 25%;
+    float: left;
+    margin-left: 67vw;
+}
+
+.bettingMode {
+    margin-left: 17.8vw;
+    width: 80%;
+    padding-bottom: 2vw;
+    float: left;
+    border-left: solid 1px #ccc;
+    border-right: solid 1px #ccc;
+    border-bottom: solid 3px #ccc;
+}
+
+.sTdDescriptionPool {
+    padding-top: 20px;
+    padding-left: 7px;
+    line-height: 29px;
+}
+
+.sSpDescriptionPool, .sSpDescriptionResult {
+    padding-top: 2vw;
+    font-size: 16px;
+}
+
+.sLblRaceInformationTitle {
+    font-size: 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.sTdRaceInformation span {
+    display: block;
+}
+
+.sTdRaceInformation {
+    height: 28px;
+    vertical-align: top;
+    font-size: 15px;
+}
+
+.sTdMainRaceInfomation {
+    background-color: #96d0ff;
+    color: #003158;
+    float: left;
+    padding-left: 3vw;
+    width: 80%;
+    margin-left: 2vw;
+}
+
+.sDvRaceInformation, .sDvRaceInformationNormal {
+    display: table;
+    width: 100%;
+    padding-top: 1vw;
+    padding-bottom: 1vw;
+}
+
+.sDvRaceInformation > div, .sDvRaceInformationNormal > div {
+    display: table-row;
+}
+
+.sLblMTP {
+    font-weight: 700;
+    text-align: inherit;
+    position: relative;
+    top: 20%;
+    padding-left: 6px;
+    color: white;
+}
+
+.sLblTrackNameTitle {
+    font-weight: 700;
+    padding-left: 6px;
+    padding-right: 10px;
+    font-size: 20px;
+    line-height: 2;
+    color: white;
+    text-transform: uppercase;
+}
+
+.sTlbTracksMenu > a > div {
+    display: table-cell;
+    vertical-align: middle;
+    border-bottom: solid 1px #ccc;
+}
+
+.sTlbTracksMenu {
+    display: table;
+    width: 100%;
+}
+
+.sTlbTracksMenu > a {
+    display: table;
+    width: 100%;
+}
+
+.edit_profile {
+    margin-left: 17vw;
+}
+
+.sTlbTracksMenu > a > div {
+    height: 40px;
+    cursor: pointer !important;
+    text-align: center;
+    display: table-row;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+    background-color: #fff;
+    -webkit-transition: all 0.1s linear 0s;
+    -moz-transition: all 0.1s linear 0s;
+    -ms-transition: all 0.1s linear 0s;
+    -o-transition: all 0.1s linear 0s;
+    transition: all 0.1s linear 0s;
+}
+
+.sTlbTracksMenu > a > div > div {
+    display: table-cell;
+    vertical-align: middle;
+    border-bottom: solid 1px #ccc;
+}
+
+.sTlbTracksMenu > a > div * {
+    cursor: pointer !important;
+}
+
+.sDvTracksColumnTrackName {
+    width: 64%;
+    padding-left: 3%;
+}
+
+a:hover, a:active, a:focus, a:link, a:visited {
+    outline: 0 !important;
+    outline-style: none;
+}
+
+.sTlbTracksMenu > a > div:hover {
+    color: #fff;
+    background-color: #2387d3;
+}
+
+.bg-faded {
+    background-color: #1360a0;
+}
+
+.body_class_header {
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: 1.5;
+    color: #292b2c;
+    background-color: #fff;
+    margin: 0px;
+}
+
+.fixed-top {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+}
+
+.navbar-toggleable-md {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.navbar {
+    height: 6.5vw;
+    display: flex;
+    padding: 0.5rem 1rem;
+}
+
+*, *:after, *::before {
+    box-sizing: border-box;
+}
+
+.navbar-light .navbar-brand, .navbar-light .navbar-toggler {
+    color: rgba(0, 0, 0, 0.9);
+}
+
+.navbar-brand {
+    margin-top: 4px;
+    margin-left: 20px;
+    display: inline-block;
+    padding-top: .25rem;
+    padding-bottom: .25rem;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+a {
+    transition: .3s;
+}
+
+a {
+    text-decoration: none;
+}
+
+a {
+    background: transparent;
+}
+
+a, area, button, [role="button"], input, label, select, summary, textarea {
+    touch-action: manipulation;
+}
+
+.logo {
+    width: 210px;
+}
+
+img {
+    border: 0;
+}
+
+img {
+    vertical-align: middle;
+}
+
+.navbar-toggleable-md .navbar-collapse {
+    display: flex !important;
+    width: 100%;
+}
+
+.navbar-toggleable-md .navbar-nav {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+}
+
+.navbar-nav {
+    margin-top: 18px;
+    margin-left: 40px;
+    display: flex;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.navbar-nav {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+ol, ul {
+    margin: 0 0 20px;
+}
+
+.dropup, .dropdown {
+    position: relative;
+}
+
+ol li, ul li {
+    color: #363636;
+    font-family: "Lato", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 1.3;
+    margin: 0 0 10px;
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #fff;
+    font-family: "Lato", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.2;
+    text-transform: uppercase;
+}
+
+.navbar-nav .nav-link {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.nav-link {
+    display: block;
+}
+
+.navbar-light .navbar-nav .nav-link:focus, .navbar-light .navbar-nav .nav-link:hover {
+    border-bottom: 4px solid white;
+}
+
+a:active, a:hover {
+    outline: 0;
+}
+
+.table_edit_area {
+    width: 90%;
+    margin: 0 auto;
+}
+
+#mainDiv {
+    width: 80%;
+    margin-top: 3vw;
+    position: relative;
+    border-bottom: 2px solid #d5d5d5;
+    margin-left: 10vw;
+    margin-bottom: 3vw;
+}
+
+.main-content {
+    position: relative;
+    border-bottom: 2px solid #d5d5d5;
+}
+
+.hero_image {
+    background-image: url(../img/lg_racetracks.jpg);
+}
+
+.hero {
+    background-color: #040509;
+    background-position: center 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 567px;
+    padding: 30px 0 0;
+}
+
+.hero .container {
+    height: 100%;
+}
+
+.container {
+    padding: 0;
+}
+
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    width: 1024px;
+    zoom: 1;
+}
+
+.hero_content {
+    margin-top: -3vw;
+    float: left;
+    height: 100%;
+    padding: 50px 0;
+    width: 100%;
+}
+
+.block-center {
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+
+.dk-header__not-padding-left {
+    padding-left: 0;
+}
+
+.col-2 {
+    flex: 0 0 16.666667%;
+    max-width: 16.666667%;
+}
+
+.col, .col-1, .col-10, .col-11, .col-12, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-auto, .col-lg, .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-auto, .col-md, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-auto, .col-sm, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-auto, .col-xl, .col-xl-1, .col-xl-10, .col-xl-11, .col-xl-12, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-auto {
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+::selection {
+    background: #4682b4;
+    color: #fff;
+}
+
+.dk-header__bookie-information-content {
+    padding-right: 25px;
+}
+
+.dk-header__bookie-information-content {
+    float: left;
+    height: 74px;
+    position: relative;
+    width: 100%;
+}
+
+.dk-header__bookie-btn {
+    float: right;
+    padding-left: 0;
+    width: 100%;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+a:not([href]):not([tabindex]) {
+    color: inherit;
+    text-decoration: none;
+}
+
+.dk-header__myaccount {
+    height: 55px;
+    width: 60px;
+    margin: 10px 15px 0 10px;
+    float: right;
+    border: 2px solid #44abff;
+    border-radius: 5px;
+    transition: all .3s ease 0s;
+    background-color: transparent;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.dk-header__myaccount span:hover {
+    color: #fff;
+}
+
+.dk-header__myaccount span:active {
+    color: #fff;
+}
+
+.btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #0062cc;
+    border-color: #005cbf;
+}
+
+.dk-header__myaccount:active {
+    background-color: #003158;
+    border-color: #fff;
+}
+
+a:active, a:hover {
+    outline: 0;
+}
+
+a:active, a:hover {
+    outline: 0;
+}
+
+a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+.dk-header__myaccount:hover {
+    background-color: #003158;
+    border-color: #fff;
+}
+
+.dk-header__myaccount {
+    height: 55px;
+    width: 60px;
+    margin: 10px 15px 0 10px;
+    float: right;
+    border: 2px solid #44abff;
+    border-radius: 5px;
+    transition: all .3s ease 0s;
+    background-color: transparent;
+}
+
+.btn:hover {
+    color: #212529;
+    text-decoration: none;
+}
+
+a:focus, a:hover {
+    color: #23527c;
+    text-decoration: none;
+}
+
+a:active, a:hover {
+    outline: 0;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.dk-header__myaccount::after {
+    display: none;
+}
+
+.dk-header__myaccount span {
+    color: #44abff;
+    font-size: 32px;
+    line-height: 34px;
+}
+
+@font-face {
+    font-family: FontAwesome;
+    src: url(../font/fontawesome-webfont.woff2) format("woff2");
+    font-weight: 400;
+    font-style: normal;
+}
+
+.fa {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+fa, .fa-stack {
+    display: inline-block;
+}
+
+a:not([href]):not([tabindex]) {
+    color: inherit;
+    text-decoration: none;
+}
+
+.fa-user:before {
+    content: "\f007";
+}
+
+.fa-user:after {
+    display: none;
+}
+
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+
+.dk-header__bookie-money {
+    max-width: 45%;
+    width: 100%;
+}
+
+.fa-pull-right, .pull-right {
+    float: right;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+p:last-child, p:only-child {
+    margin: 0;
+}
+
+p:last-child, p:only-child {
+    margin: 0;
+}
+
+.dk-header__text {
+    color: #fff;
+    margin-bottom: 0;
+    padding-top: 0;
+}
+
+.dk-header__username {
+    display: block;
+    font: normal normal normal 14px/16px Lato, sans-serif;
+    padding-top: 21px;
+    text-transform: uppercase;
+}
+
+b, strong {
+    font-weight: bolder;
+}
+
+.dk-header__text {
+    color: #fff;
+    margin-bottom: 0;
+    padding-top: 0;
+}
+
+.dk-header__money-text {
+    color: #fff;
+    display: block;
+    font: normal bold normal 14px/12px Arial, sans-serif;
+    padding-top: 0;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+blockquote, li, p {
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+.text-center {
+    text-align: center !important;
+}
+
+.block-center .block-center_content {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.hero_title {
+    text-align: left;
+    font-size: 67px;
+    color: #fff;
+    font-family: "Lato", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+    text-transform: uppercase;
+    margin-top: -50px;
+}
+
+.hero_title.small {
+    display: block;
+    color: #fff;
+    font-family: "Lato", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    letter-spacing: 3px;
+    margin-top: 0px;
+}
+
+.nav-item {
+    padding: 5px;
+}
+
+.header_signup {
+    background: #F8001D url(../img/header-btn-signup.jpg) 0 0 repeat-x;
+    background-size: auto 100%;
+    color: #fff;
+    border: 0;
+    height: 46px;
+    width: 160px;
+    line-height: 46px;
+}
+
+.header_signup:hover {
+    color: #fff;
+}
+
+.header_btn_sign_up {
+    line-height: 42px;
+    font-family: "Lato", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 700;
+    border-radius: 5px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    transition: .2s;
+    font-size: 14px;
+}
+
+.select_language {
+    width: 5vw;
+    margin-top: 5vw;
+    margin-left: 83vw;
+}
+
+.select_language_sign_in {
+    width: 5vw;
+    position: absolute;
+    z-index: 2;
+    margin-top: 1vw;
+    margin-left: 95vw;
+    float: right;
+}
+
+.select_language_sign_up {
+    width: 6vw;
+    position: absolute;
+    margin-top: -2vw;
+    margin-left: 3vw;
+    float: right;
+}
+
+.select_language img {
+    height: 2vw;
+}
+
+.select_language_sign_up img {
+    height: 2vw;
+}
+
+.select_language_sign_in img {
+    height: 2vw;
+}

@@ -1,0 +1,251 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: #333;
+    background-color: #fff;
+}
+
+.signup_header {
+    text-align: center;
+    margin-bottom: -2vw;
+}
+
+.signup_title {
+    color: #fff;
+    font-family: "Lato", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 700;
+    line-height: 1.1;
+    font-size: 60px;
+    margin: 0 0 15px;
+    padding: 0 0 12px;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.8);
+    text-align: center;
+}
+
+.signup_btn-login {
+    color: #fff;
+    font-family: "Lato", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    border: 2px solid #fff;
+    border-radius: 10px;
+    padding: 10px 20px;
+    text-align: center;
+    display: inline-block;
+    margin: 25px 0 10px;
+    min-width: 140px;
+    transition: .2s;
+}
+
+.container {
+    width: 1170px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 100%;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    display: none;
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+    outline: 0;
+}
+
+.signup_form {
+    padding: 25px 35px 25px;
+    width: 834px;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+.form_field {
+    position: relative;
+}
+
+.form input[type=text], .form input[type=email], .form input[type=password] {
+    min-height: 35px;
+}
+
+.form input[type=text], .form input[type=email], .form input[type=password], .form textarea {
+    width: 100%;
+    color: #414141;
+    border-radius: 3px;
+    border: solid #AAAAAA 1px;
+    text-indent: 5px;
+    font-size: 14px;
+    padding: 15px 17px;
+    height: auto;
+}
+
+.sep_1 {
+    display: none;
+}
+
+.form_col-50 {
+    margin-right: 2%;
+    float: left;
+    width: 49%;
+    margin-bottom: 22px;
+}
+
+.form_col-50:last-child {
+    margin-right: 0;
+}
+
+.form_col-100 {
+    margin-bottom: 22px;
+}
+
+.form_row:after {
+    clear: both;
+}
+
+.form_row:before, .form_row:after {
+    content: "";
+    display: table;
+}
+
+.form_label {
+    color: #fff;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 22px;
+}
+
+.form_col-33-3 {
+    float: left;
+    margin-right: 2%;
+    margin-bottom: 22px;
+    width: 29.5%;
+}
+
+.form_col-33:last-child {
+    margin-right: 0;
+}
+
+.form_row-birth .form_col-33-3 {
+    margin-bottom: 0;
+}
+
+.form_select {
+    display: block;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.form_select select {
+    padding: 10px 50px 10px 10px;
+    background-color: transparent;
+    border: solid #AAAAAA 1px;
+    border-radius: 3px;
+    font-size: 14px;
+    color: #414141;
+    height: 40px;
+    -webkit-appearance: none;
+    position: relative;
+    z-index: 3;
+    width: 100%;
+}
+
+.form_select:before {
+    background-color: #fff;
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+}
+
+.form_select:after {
+    width: 40px;
+}
+
+.form_select:after {
+    background-image: url(../img/arrow-down.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-color: #4fb0fd;
+    border-radius: 1px;
+    content: "";
+    display: block;
+    width: 40px;
+    height: 100%;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    z-index: 2;
+}
+
+.form_btns {
+    padding: 10px 0;
+}
+
+.form_submit {
+    font-family: "Lato", Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 25px;
+    margin-left: 20vw;
+    border: 3px solid;
+}
+
+.signup_main {
+    background: transparent url(../img/signup-bg.jpg) center top no-repeat;
+    background-size: cover;
+    padding: 50px 0 35px;
+    position: relative;
+}
+
+.signup_btn-login {
+    margin: 67px 35px 0 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.fade {
+    opacity: 0;
+    -webkit-transition: opacity .15s linear;
+    -o-transition: opacity .15s linear;
+    transition: opacity .15s linear;
+}
+
+.signup_logo {
+    display: block;
+    margin: 0 auto 31px;
+    max-width: 100%;
+    width: 300px;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+    display: block;
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+}
+
+button, select {
+    text-transform: none;
+}
+
+button, input, optgroup, select, textarea {
+    margin: 0;
+    font: inherit;
+    color: inherit;
+}
+
+.age_restriction {
+    height: 3vw;
+}
