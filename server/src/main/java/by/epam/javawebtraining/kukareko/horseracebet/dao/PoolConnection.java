@@ -1,15 +1,11 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao;
 
-import by.epam.javawebtraining.kukareko.horseracebet.model.exception.technical.InvalidDriverNameException;
 import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
-import com.mysql.jdbc.Driver;
 import org.apache.log4j.Logger;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -22,9 +18,11 @@ import java.util.concurrent.locks.ReentrantLock;
 public class PoolConnection {
 
     private static final Logger LOGGER;
-    private static PoolConnection instance;
     private static final ReentrantLock LOCK;
+
+    private static PoolConnection instance;
     private static BlockingQueue<Connection> connections;
+
     private ConfigurationManager configurationManager;
 
     static {
@@ -58,7 +56,7 @@ public class PoolConnection {
                 connections.add(connection);
             }
         } catch (ClassNotFoundException ex) {
-            LOGGER.error(new InvalidDriverNameException(ex).getMessage());
+            LOGGER.error(ex.getMessage());
         }
     }
 

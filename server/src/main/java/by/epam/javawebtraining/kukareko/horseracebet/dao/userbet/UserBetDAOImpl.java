@@ -5,6 +5,7 @@ import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.FactoryBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.TypeBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.AbstractDAO;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.UserBet;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,15 +21,14 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class UserBetDAOImpl extends AbstractDAO implements UserBetDAO {
 
-    private static UserBetDAOImpl dao;
     private static final ReentrantLock LOCK = new ReentrantLock();
-    private static final AbstractBuilder builder;
 
-    static {
-        builder = FactoryBuilder.getBuilder(TypeBuilder.USER_BET);
-    }
+    private static UserBetDAOImpl dao;
+
+    private AbstractBuilder builder;
 
     private UserBetDAOImpl() {
+        builder = FactoryBuilder.getBuilder(TypeBuilder.USER_BET);
     }
 
     public static UserBetDAOImpl getInstance() {
@@ -43,14 +43,14 @@ public class UserBetDAOImpl extends AbstractDAO implements UserBetDAO {
     }
 
     @Override
-    public UserBet getById(Long id) {
+    public UserBet getById(Long id) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, id);
         UserBet userBet = null;
 
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectUserBetById"), queryParams, true);
         try {
-            ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectUserBetById"), queryParams, true);
-            if ((rs != null) && (rs.next())) {
+            if (rs.next()) {
                 userBet = (UserBet) builder.getEntity(rs);
             }
         } catch (SQLException ex) {
@@ -60,83 +60,55 @@ public class UserBetDAOImpl extends AbstractDAO implements UserBetDAO {
     }
 
     @Override
-    public List<UserBet> getAll() {
-        ResultSet rs;
-        List<UserBet> userBets = new ArrayList<>();
-
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectUserBet"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    userBets.add((UserBet) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return userBets;
+    public List<UserBet> getAll() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectUserBet"), null, true);
+        return getUserBets(rs);
     }
 
     @Override
-    public boolean save(UserBet userBet) {
+    public void save(UserBet userBet) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(userBet);
 
-        try {
-            executeQuery(configurationManager.getProperty("SQL.insertUserBet"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
+        executeProcedure(configurationManager.getProperty("SQL.insertUserBet"), queryParams, false);
     }
 
     @Override
-    public List<UserBet> getByUserId(long userId) {
-        ResultSet rs;
-        List<UserBet> userBets = new ArrayList<>();
+    public List<UserBet> getByUserId(long userId) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = new HashMap<>();
 
         queryParams.put(1, userId);
 
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectUserBetByUserId"), queryParams, true);
+        return getUserBets(rs);
+    }
+
+    @Override
+    public void update(UserBet userBet) throws HorseRaceBetException {
+        Map<Integer, Object> queryParams = buildParamsMap(userBet);
+        queryParams.put(6, userBet.getId());
+
+        executeQuery(configurationManager.getProperty("SQL.updateUserBet"), queryParams, false);
+    }
+
+    @Override
+    public void delete(UserBet userBet) throws HorseRaceBetException {
+        Map<Integer, Object> queryParams = new HashMap<>();
+        queryParams.put(1, userBet.getId());
+
+        executeQuery(configurationManager.getProperty("SQL.deleteUserBet"), queryParams, false);
+    }
+
+    private List<UserBet> getUserBets(ResultSet rs) {
+        List<UserBet> userBets = new ArrayList<>();
+
         try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectUserBetByUserId"), queryParams, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    userBets.add((UserBet) builder.getEntity(rs));
-                }
+            while (rs.next()) {
+                userBets.add((UserBet) builder.getEntity(rs));
             }
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
         }
         return userBets;
-    }
-
-    @Override
-    public boolean update(UserBet userBet) {
-        Map<Integer, Object> queryParams = buildParamsMap(userBet);
-        queryParams.put(6, userBet.getId());
-
-        try {
-            executeQuery(configurationManager.getProperty("SQL.updateUserBet"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean delete(UserBet userBet) {
-        Map<Integer, Object> queryParams = new HashMap<>();
-        queryParams.put(1, userBet.getId());
-
-        try {
-            executeQuery(configurationManager.getProperty("SQL.deleteUserBet"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
     }
 
     private Map<Integer, Object> buildParamsMap(UserBet userBet) {

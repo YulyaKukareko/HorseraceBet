@@ -11,10 +11,10 @@ import java.util.Objects;
 public class User implements Serializable {
 
     private long id;
-    private String login;
+    private String email;
     private String firstName;
     private String lastName;
-    private String country;
+    private long countryId;
     private BigDecimal balance;
     private String password;
     private Role role;
@@ -22,13 +22,13 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(long id, String login, String firstName, String lastName, String country, BigDecimal balance,
+    public User(long id, String email, String firstName, String lastName, long countryId, BigDecimal balance,
                 String password, Role role) {
         this.id = id;
-        this.login = login;
+        this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.country = country;
+        this.countryId = countryId;
         this.balance = balance;
         this.password = password;
         this.role = role;
@@ -42,20 +42,20 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public String getEmail() {
+        return email;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getCountry() {
-        return country;
+    public long getCountryId() {
+        return countryId;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCountryId(long countryId) {
+        this.countryId = countryId;
     }
 
     public BigDecimal getBalance() {
@@ -104,28 +104,28 @@ public class User implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return id == user.id &&
-                role == user.role &&
-                Objects.equals(login, user.login) &&
+                countryId == user.countryId &&
+                Objects.equals(email, user.email) &&
                 Objects.equals(firstName, user.firstName) &&
                 Objects.equals(lastName, user.lastName) &&
-                Objects.equals(country, user.country) &&
                 Objects.equals(balance, user.balance) &&
-                Objects.equals(password, user.password);
+                Objects.equals(password, user.password) &&
+                role == user.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, firstName, lastName, country, balance, password, role);
+        return Objects.hash(id, email, firstName, lastName, countryId, balance, password, role);
     }
 
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", login='" + login + '\'' +
+                ", email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", country='" + country + '\'' +
+                ", countryId=" + countryId +
                 ", balance=" + balance +
                 ", password='" + password + '\'' +
                 ", role=" + role +

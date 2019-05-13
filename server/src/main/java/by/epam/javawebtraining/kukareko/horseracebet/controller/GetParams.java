@@ -1,6 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.controller;
 
 import org.apache.log4j.Logger;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 
@@ -12,7 +13,7 @@ public interface GetParams {
 
     Logger LOGGER = Logger.getLogger("JSONParserLog");
 
-    default String getParam(HttpServletRequest request){
+    default String getParam(HttpServletRequest request) {
         StringBuilder jb = new StringBuilder();
         String line;
 

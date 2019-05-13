@@ -11,7 +11,8 @@ import java.util.Objects;
 public class Race {
 
     private long id;
-    private String location;
+    private String name;
+    private long countryId;
     private double distance;
     private BigDecimal purse;
     private RaceType type;
@@ -20,9 +21,10 @@ public class Race {
     public Race() {
     }
 
-    public Race(long id, String location, double distance, BigDecimal purse, RaceType type, Timestamp time) {
+    public Race(long id, String name, long countryId, double distance, BigDecimal purse, RaceType type, Timestamp time) {
         this.id = id;
-        this.location = location;
+        this.name = name;
+        this.countryId = countryId;
         this.distance = distance;
         this.purse = purse;
         this.type = type;
@@ -37,12 +39,20 @@ public class Race {
         this.id = id;
     }
 
-    public String getLocation() {
-        return location;
+    public String getName() {
+        return name;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public long getCountryId() {
+        return countryId;
+    }
+
+    public void setCountryId(long countryId) {
+        this.countryId = countryId;
     }
 
     public double getDistance() {
@@ -83,26 +93,28 @@ public class Race {
         if (o == null || getClass() != o.getClass()) return false;
         Race race = (Race) o;
         return id == race.id &&
+                countryId == race.countryId &&
                 Double.compare(race.distance, distance) == 0 &&
-                Objects.equals(location, race.location) &&
+                Objects.equals(name, race.name) &&
                 Objects.equals(purse, race.purse) &&
-                Objects.equals(type, race.type) &&
+                type == race.type &&
                 Objects.equals(time, race.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, location, distance, purse, type, time);
+        return Objects.hash(id, name, countryId, distance, purse, type, time);
     }
 
     @Override
     public String toString() {
         return "Race{" +
                 "id=" + id +
-                ", location='" + location + '\'' +
+                ", name='" + name + '\'' +
+                ", countryId=" + countryId +
                 ", distance=" + distance +
                 ", purse=" + purse +
-                ", type='" + type + '\'' +
+                ", type=" + type +
                 ", time=" + time +
                 '}';
     }

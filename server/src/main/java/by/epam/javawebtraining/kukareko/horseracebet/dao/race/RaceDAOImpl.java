@@ -5,6 +5,9 @@ import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.FactoryBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.TypeBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.AbstractDAO;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Race;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.DatabaseConnectionException;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.IncorrectInputParamException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,15 +23,14 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class RaceDAOImpl extends AbstractDAO implements RaceDAO {
 
-    private static RaceDAOImpl dao;
     private static final ReentrantLock LOCK = new ReentrantLock();
-    private static final AbstractBuilder builder;
 
-    static {
-        builder = FactoryBuilder.getBuilder(TypeBuilder.RACE);
-    }
+    private static RaceDAOImpl dao;
+
+    private AbstractBuilder builder;
 
     private RaceDAOImpl() {
+        builder = FactoryBuilder.getBuilder(TypeBuilder.RACE);
     }
 
     public static RaceDAOImpl getInstance() {
@@ -43,14 +45,15 @@ public class RaceDAOImpl extends AbstractDAO implements RaceDAO {
     }
 
     @Override
-    public Race getById(Long id) {
+    public Race getById(Long id) throws IncorrectInputParamException, DatabaseConnectionException {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, id);
         Race race = null;
 
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectRaceById"), queryParams, true);
+
         try {
-            ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectRaceById"), queryParams, true);
-            if ((rs != null) && (rs.next())) {
+            if (rs.next()) {
                 race = (Race) builder.getEntity(rs);
             }
         } catch (SQLException ex) {
@@ -60,167 +63,85 @@ public class RaceDAOImpl extends AbstractDAO implements RaceDAO {
     }
 
     @Override
-    public List<Race> getAll() {
-        ResultSet rs;
-        List<Race> races = new ArrayList<>();
+    public List<Race> getAll() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectRace"), null, true);
 
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectRace"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    races.add((Race) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return races;
+        return getRaces(rs);
     }
 
     @Override
-    public boolean save(Race race) {
+    public void save(Race race) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(race);
 
-        try {
-            executeQuery(configurationManager.getProperty("SQL.insertRace"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
+        executeQuery(configurationManager.getProperty("SQL.insertRace"), queryParams, false);
     }
 
     @Override
-    public boolean update(Race race) {
+    public void update(Race race) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(race);
-        queryParams.put(6, race.getId());
+        queryParams.put(7, race.getId());
 
-        try {
-            executeQuery(configurationManager.getProperty("SQL.updateRace"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
+        executeQuery(configurationManager.getProperty("SQL.updateRace"), queryParams, false);
     }
 
     @Override
-    public boolean delete(Race race) {
+    public void delete(Race race) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, race.getId());
 
-        try {
-            executeQuery(configurationManager.getProperty("SQL.deleteRace"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
+        executeQuery(configurationManager.getProperty("SQL.deleteRace"), queryParams, false);
     }
 
     @Override
-    public List<Race> getJoinHorseStarting() {
-        ResultSet rs;
-        List<Race> races = new ArrayList<>();
+    public List<Race> getJoinHorseStarting() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectRaceJoinHorseStartingPrice"), null, true);
 
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectRaceJoinHorseStartingPrice"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    races.add((Race) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return races;
+        return getRaces(rs);
     }
 
     @Override
-    public List<Race> getJoinBet() {
-        ResultSet rs;
-        List<Race> races = new ArrayList<>();
+    public List<Race> getJoinBet() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectRaceJoinBet"), null, true);
 
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectRaceJoinBet"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    races.add((Race) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return races;
+        return getRaces(rs);
     }
 
     @Override
-    public List<Race> getJoinHorseStartingPriceById(long id) {
-        ResultSet rs;
-        List<Race> races = new ArrayList<>();
+    public List<Race> getJoinHorseStartingPriceById(long id) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, id);
 
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectRaceJoinHorseStartingPriceById"), queryParams, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    races.add((Race) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return races;
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectRaceJoinHorseStartingPriceById"), queryParams, true);
+        return getRaces(rs);
     }
 
     @Override
-    public List<Race> getCompletedRacesNotJoinResult() {
-        ResultSet rs;
-        List<Race> races = new ArrayList<>();
+    public List<Race> getCompletedRacesNotJoinResult() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectCompletedRace"), null, true);
 
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectCompletedRace"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    races.add((Race) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return races;
+        return getRaces(rs);
     }
 
     @Override
-    public List<Race> getNotJoinResult() {
-        ResultSet rs;
-        List<Race> races = new ArrayList<>();
+    public List<Race> getNotJoinResult() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectRaceNotJoinResult"), null, true);
 
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectRaceNotJoinResult"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    races.add((Race) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return races;
+        return getRaces(rs);
     }
 
     @Override
-    public List<Race> getCompletedRacesJoinResult() {
-        ResultSet rs;
+    public List<Race> getCompletedRacesJoinResult() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectCompletedRaceJoinResult"), null, true);
+
+        return getRaces(rs);
+    }
+
+    private List<Race> getRaces(ResultSet rs) {
         List<Race> races = new ArrayList<>();
 
         try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectCompletedRaceJoinResult"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    races.add((Race) builder.getEntity(rs));
-                }
+            while (rs.next()) {
+                races.add((Race) builder.getEntity(rs));
             }
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
@@ -231,11 +152,12 @@ public class RaceDAOImpl extends AbstractDAO implements RaceDAO {
     private Map<Integer, Object> buildParamsMap(Race race) {
         Map<Integer, Object> queryParams = new HashMap<>();
 
-        queryParams.put(1, race.getLocation());
-        queryParams.put(2, race.getDistance());
-        queryParams.put(3, race.getPurse());
-        queryParams.put(4, race.getType());
-        queryParams.put(5, race.getTime());
+        queryParams.put(1, race.getName());
+        queryParams.put(2, race.getCountryId());
+        queryParams.put(3, race.getDistance());
+        queryParams.put(4, race.getPurse());
+        queryParams.put(5, race.getType());
+        queryParams.put(6, race.getTime());
 
         return queryParams;
     }

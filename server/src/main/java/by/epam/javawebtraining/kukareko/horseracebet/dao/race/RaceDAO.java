@@ -2,6 +2,7 @@ package by.epam.javawebtraining.kukareko.horseracebet.dao.race;
 
 import by.epam.javawebtraining.kukareko.horseracebet.dao.DAO;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Race;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
 
 import java.util.List;
 
@@ -11,15 +12,15 @@ import java.util.List;
  */
 public interface RaceDAO extends DAO<Race, Long> {
 
-    List<Race> getJoinBet();
+    List<Race> getJoinBet() throws HorseRaceBetException;
 
-    List<Race> getJoinHorseStarting();
+    List<Race> getJoinHorseStarting() throws HorseRaceBetException;
 
-    List<Race> getJoinHorseStartingPriceById(long raceId);
+    List<Race> getJoinHorseStartingPriceById(long raceId) throws HorseRaceBetException;
 
-    List<Race> getCompletedRacesNotJoinResult();
+    List<Race> getCompletedRacesNotJoinResult() throws HorseRaceBetException;
 
-    List<Race> getCompletedRacesJoinResult();
+    List<Race> getCompletedRacesJoinResult() throws HorseRaceBetException;
 
-    List<Race> getNotJoinResult();
+    List<Race> getNotJoinResult() throws HorseRaceBetException;
 }

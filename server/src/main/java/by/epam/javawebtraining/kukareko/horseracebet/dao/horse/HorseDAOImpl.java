@@ -5,6 +5,8 @@ import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.FactoryBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.TypeBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.AbstractDAO;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Horse;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,15 +21,14 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
 
-    private static HorseDAOImpl dao;
     private static final ReentrantLock LOCK = new ReentrantLock();
-    private static final AbstractBuilder builder;
 
-    static {
-        builder = FactoryBuilder.getBuilder(TypeBuilder.HORSE);
-    }
+    private static HorseDAOImpl dao;
+
+    private AbstractBuilder builder;
 
     private HorseDAOImpl() {
+        builder = FactoryBuilder.getBuilder(TypeBuilder.HORSE);
     }
 
     public static HorseDAOImpl getInstance() {
@@ -42,14 +43,14 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
     }
 
     @Override
-    public Horse getById(Long id) {
+    public Horse getById(Long id) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, id);
         Horse horse = null;
 
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorseById"), queryParams, true);
         try {
-            ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorseById"), queryParams, true);
-            if ((rs != null) && (rs.next())) {
+            if (rs.next()) {
                 horse = (Horse) builder.getEntity(rs);
             }
         } catch (SQLException ex) {
@@ -59,113 +60,58 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
     }
 
     @Override
-    public List<Horse> getAll() {
-        ResultSet rs;
-        List<Horse> horses = new ArrayList<>();
+    public List<Horse> getAll() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorse"), null, true);
 
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectHorse"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    horses.add((Horse) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return horses;
+        return getHorses(rs);
     }
 
     @Override
-    public boolean save(Horse horse) {
+    public void save(Horse horse) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(horse);
 
-        try {
-            executeQuery(configurationManager.getProperty("SQL.insertHorse"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
+        executeQuery(configurationManager.getProperty("SQL.insertHorse"), queryParams, false);
     }
 
     @Override
-    public boolean update(Horse horse) {
+    public void update(Horse horse) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(horse);
         queryParams.put(5, horse.getId());
 
-        try {
-            executeQuery(configurationManager.getProperty("SQL.updateHorse"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
+        executeQuery(configurationManager.getProperty("SQL.updateHorse"), queryParams, false);
     }
 
     @Override
-    public boolean delete(Horse horse) {
+    public void delete(Horse horse) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, horse.getId());
 
-        try {
-            executeQuery(configurationManager.getProperty("SQL.deleteHorse"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
+        executeQuery(configurationManager.getProperty("SQL.deleteHorse"), queryParams, false);
     }
 
     @Override
-    public List<Horse> getJoinHorseStartingPrice() {
-        ResultSet rs;
-        List<Horse> horses = new ArrayList<>();
-
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinHorseStartingPrice"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    horses.add((Horse) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return horses;
+    public List<Horse> getJoinHorseStartingPrice() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinHorseStartingPrice"), null, true);
+        return getHorses(rs);
     }
 
     @Override
-    public List<Horse> getJoinFirstHorseBetAndHorseStartingPrice() {
-        ResultSet rs;
-        List<Horse> horses = new ArrayList<>();
+    public List<Horse> getJoinFirstHorseBetAndHorseStartingPrice() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinStartingPriceAndFirstHorseBet"), null, true);
 
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinStartingPriceAndFirstHorseBet"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    horses.add((Horse) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return horses;
+        return getHorses(rs);
     }
 
     @Override
-    public Horse getJoinHorseStartingPriceByStartingPriceId(long startingPriceId) {
-        ResultSet rs;
+    public Horse getJoinHorseStartingPriceByStartingPriceId(long startingPriceId) throws HorseRaceBetException {
         Horse horse = null;
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, startingPriceId);
 
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorseJoinStartingPriceAndFirstHorseBySPId"), queryParams, true);
         try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectHorseJoinStartingPriceAndFirstHorseBySPId"), queryParams, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    horse = (Horse) builder.getEntity(rs);
-                }
+            while (rs.next()) {
+                horse = (Horse) builder.getEntity(rs);
             }
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
@@ -174,56 +120,36 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
     }
 
     @Override
-    public List<Horse> getJoinSecondHorseBetAndHorseStartingPrice() {
-        ResultSet rs;
-        List<Horse> horses = new ArrayList<>();
+    public List<Horse> getJoinSecondHorseBetAndHorseStartingPrice() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinStartingPriceAndSecondHorseBet"), null, true);
 
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinStartingPriceAndSecondHorseBet"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    horses.add((Horse) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return horses;
+        return getHorses(rs);
     }
 
     @Override
-    public List<Horse> getJoinHorseStartingPriceByRaceId(long raceId) {
-        ResultSet rs;
+    public List<Horse> getJoinHorseStartingPriceByRaceId(long raceId) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, raceId);
-        List<Horse> horses = new ArrayList<>();
 
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinHorseStartingPriceByRaceId"), queryParams, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    horses.add((Horse) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return horses;
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinHorseStartingPriceByRaceId"), queryParams, true);
+        return getHorses(rs);
     }
 
     @Override
-    public List<Horse> getJoinHorseStartingPriceExcludingByRaceId(long raceId) {
-        ResultSet rs;
+    public List<Horse> getJoinHorseStartingPriceExcludingByRaceId(long raceId) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, raceId);
+
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinHorseStartingPriceExcludingByRaceId"), queryParams, true);
+        return getHorses(rs);
+    }
+
+    private List<Horse> getHorses(ResultSet rs) {
         List<Horse> horses = new ArrayList<>();
 
         try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinHorseStartingPriceExcludingByRaceId"), queryParams, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    horses.add((Horse) builder.getEntity(rs));
-                }
+            while (rs.next()) {
+                horses.add((Horse) builder.getEntity(rs));
             }
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());

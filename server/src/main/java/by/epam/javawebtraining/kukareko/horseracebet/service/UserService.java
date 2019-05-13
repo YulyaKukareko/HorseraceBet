@@ -1,11 +1,19 @@
 package by.epam.javawebtraining.kukareko.horseracebet.service;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.validator.FieldValidator.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.user.UserDAO;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.user.UserDAOImpl;
+import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Role;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.User;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.DuplicationEmailException;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.IncorrectInputParamException;
+import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
 import by.epam.javawebtraining.kukareko.horseracebet.util.CryptMD5;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -14,10 +22,12 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class UserService {
 
-    private UserDAO userDAO;
-
-    private static UserService service;
     private static final ReentrantLock LOCK = new ReentrantLock();
+
+    private static ConfigurationManager configurationManager;
+    private static UserService service;
+
+    private UserDAO userDAO;
 
     private UserService() {
         userDAO = UserDAOImpl.getInstance();
@@ -28,30 +38,77 @@ public class UserService {
             LOCK.lock();
             if (service == null) {
                 service = new UserService();
+                configurationManager = ConfigurationManager.getInstance();
             }
             LOCK.unlock();
         }
         return service;
     }
 
-    public User checkUser(String login, String password) {
+    public List<User> getAll() throws HorseRaceBetException {
+        return userDAO.getAll();
+    }
+
+    public User checkUser(String email, String password) throws HorseRaceBetException {
+        validateEmail(email);
+        validatePassword(password);
         password = CryptMD5.cryptWithMD5(password);
-        return userDAO.getByLoginAndPassword(login, password);
+        return userDAO.getByLoginAndPassword(email, password);
     }
 
-    public boolean save(User user) {
-        return userDAO.save(user);
+    public void save(User user) throws HorseRaceBetException {
+        validateUserObject(user);
+
+        if (userDAO.checkExistsEmail(user.getEmail())) {
+            user.setRole(Role.USER);
+
+            userDAO.save(user);
+        } else {
+            String duplicationEmailMessage = configurationManager.getProperty("duplicationEmailMessage");
+
+            throw new DuplicationEmailException(duplicationEmailMessage);
+        }
     }
 
-    public User getUserById(Long id) {
+    public User getUserById(Long id) throws HorseRaceBetException {
+        validateId(id);
+
         return userDAO.getById(id);
     }
 
-    public boolean makeBet(Long id, BigDecimal betMoney) {
-        return userDAO.makeBet(id, betMoney);
+    public void makeBet(Long id, BigDecimal betMoney) throws HorseRaceBetException {
+        validateId(id);
+        validateMoney(betMoney);
+
+        BigDecimal userBalance = userDAO.getById(id).getBalance();
+        if (userBalance.subtract(betMoney).signum() > 0) {
+            userDAO.makeBet(id, betMoney);
+        } else {
+            String insufficientFundsMes = configurationManager.getProperty("insufficientFundsMessage");
+
+            throw new IncorrectInputParamException(insufficientFundsMes);
+        }
     }
 
-    public boolean update(User user) {
-        return userDAO.update(user);
+    public void addUserBalanceMoney(Long id, BigDecimal betMoney) throws HorseRaceBetException {
+        validateId(id);
+        validateMoney(betMoney);
+
+        userDAO.updateBalance(id, betMoney);
+    }
+
+    public void update(User user) throws HorseRaceBetException {
+        validateUserObject(user);
+        validateId(user.getId());
+
+        userDAO.update(user);
+    }
+
+    private void validateUserObject(User user) throws IncorrectInputParamException {
+        validateName(user.getFirstName());
+        validateName(user.getLastName());
+        validateId(user.getCountryId());
+        validateEmail(user.getEmail());
+        validateMoney(user.getBalance());
     }
 }

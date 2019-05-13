@@ -31,6 +31,9 @@ public class FactoryBuilder {
             case USER:
                 builder = UserBuilder.getInstance();
                 break;
+            case COUNTRY:
+                builder = CountryBuilder.getInstance();
+                break;
         }
         return builder;
     }

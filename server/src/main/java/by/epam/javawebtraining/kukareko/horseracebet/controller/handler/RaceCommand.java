@@ -2,14 +2,18 @@ package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
 
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetAction;
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetParams;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
 import by.epam.javawebtraining.kukareko.horseracebet.service.RaceService;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Race;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.RaceType;
+import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,97 +23,102 @@ import java.util.List;
  */
 public class RaceCommand implements Command, GetAction, GetParams {
 
+    private static ConfigurationManager configurationManager;
+
     private RaceService service;
 
     public RaceCommand() {
         service = RaceService.getInstance();
+        configurationManager = ConfigurationManager.getInstance();
     }
 
     @Override
-    public JSONObject execute(HttpServletRequest request) {
+    public JSONObject execute(HttpServletRequest request, HttpServletResponse response) throws HorseRaceBetException {
+        String responseParamResult = configurationManager.getProperty("configJSON.result");
+        String dataFormat = configurationManager.getProperty("dataFormat");
+
         JSONObject result = new JSONObject();
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd HH:mm:ss.s")
+                .setDateFormat(dataFormat)
                 .create();
 
         switch (getAction(request)) {
             case "create":
                 Race race = gson.fromJson(getParam(request), Race.class);
 
-                addStatusResponse(result, service.save(race));
+                service.save(race);
                 break;
             case "delete":
                 race = gson.fromJson(getParam(request), Race.class);
 
-                addStatusResponse(result, service.delete(race));
+                service.delete(race);
                 break;
             case "getAll":
                 List<Race> races = service.getAll();
 
-                result.put("result", new JSONArray(races));
+                result.put(responseParamResult, new JSONArray(races));
                 break;
             case "update":
                 race = gson.fromJson(getParam(request), Race.class);
 
-                addStatusResponse(result, service.update(race));
+                service.update(race);
                 break;
             case "getAllTypes":
                 List<RaceType> types = Arrays.asList(RaceType.values());
 
-                result.put("result", new JSONArray(types));
+                result.put(responseParamResult, new JSONArray(types));
                 break;
             case "getRaceNotJoinResult":
                 races = service.getNotJoinResult();
 
-                result.put("result", new JSONArray(races));
+                result.put(responseParamResult, new JSONArray(races));
                 break;
             case "getRacesStartingPrices":
                 races = service.getJoinHorseStarting();
 
-                result.put("result", new JSONArray(races));
+                result.put(responseParamResult, new JSONArray(races));
                 break;
             case "getRacesStartingPricesByRaceId":
+                String requestParamRaceId = configurationManager.getProperty("requestParam.raceId");
+
                 JSONObject json = new JSONObject(getParam(request));
-                long raceId = Long.parseLong(json.get("raceId").toString());
+                long raceId = Long.parseLong(json.get(requestParamRaceId).toString());
+
                 races = service.getJoinHorseStartingPriceById(raceId);
 
-                result.put("result", new JSONArray(races));
+                result.put(responseParamResult, new JSONArray(races));
                 break;
             case "getRacesBets":
                 races = service.getJoinBet();
 
-                result.put("result", new JSONArray(races));
+                result.put(responseParamResult, new JSONArray(races));
                 break;
             case "getById":
+                String requestParamId = configurationManager.getProperty("params.id");
+                String requestParamNoResult = configurationManager.getProperty("responseParam.noResult");
+
                 json = new JSONObject(getParam(request));
-                raceId = Long.parseLong(json.get("id").toString());
+                raceId = Long.parseLong(json.get(requestParamId).toString());
                 race = service.getById(raceId);
 
                 if (race != null) {
-                    result.put("result", new JSONObject(race));
+                    result.put(responseParamResult, new JSONObject(race));
                 } else {
-                    result.put("result", "no result");
+                    result.put(responseParamResult, requestParamNoResult);
                 }
                 break;
             case "getCompletedRacesInResult":
                 races = service.getCompletedRacesJoinResult();
 
-                result.put("result", new JSONArray(races));
+                result.put(responseParamResult, new JSONArray(races));
                 break;
             case "getCompletedRaces":
                 races = service.getCompletedRacesNotJoinResult();
 
-                result.put("result", new JSONArray(races));
+                result.put(responseParamResult, new JSONArray(races));
                 break;
         }
-        return result;
-    }
 
-    private void addStatusResponse(JSONObject json, boolean isSuccess) {
-        if (isSuccess) {
-            json.put("result", "success");
-        } else {
-            json.put("result", "failed");
-        }
+        return result;
     }
 }

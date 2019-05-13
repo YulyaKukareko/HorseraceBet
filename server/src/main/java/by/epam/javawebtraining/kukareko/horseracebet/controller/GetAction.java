@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.controller;
 
+import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,8 +12,12 @@ import java.util.regex.Pattern;
  */
 public interface GetAction {
 
-    default String getAction(HttpServletRequest request){
-        Pattern pattern = Pattern.compile("([^/]+)$");
+
+    default String getAction(HttpServletRequest request) {
+        ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+        String defineActionRegExp = configurationManager.getProperty("defineActionRegExp");
+
+        Pattern pattern = Pattern.compile(defineActionRegExp);
         Matcher matcher = pattern.matcher(request.getRequestURI());
         if (matcher.find()) {
             return matcher.group(0);

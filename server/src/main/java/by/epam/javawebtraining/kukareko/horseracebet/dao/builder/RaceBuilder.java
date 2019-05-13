@@ -14,6 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class RaceBuilder extends AbstractBuilder<Race> {
 
     private static final ReentrantLock LOCK;
+
     private static RaceBuilder instance;
 
     static {
@@ -37,10 +38,12 @@ public class RaceBuilder extends AbstractBuilder<Race> {
     @Override
     public Race getEntity(ResultSet rs) {
         Race race = null;
+
         try {
             race = new Race();
             race.setId(rs.getLong("id"));
-            race.setLocation(rs.getString("location"));
+            race.setName(rs.getString("name"));
+            race.setCountryId(rs.getLong("country_id"));
             race.setTime(rs.getTimestamp("time"));
             race.setType(RaceType.valueOf(rs.getString("type").toUpperCase()));
             race.setPurse(rs.getBigDecimal("purse"));

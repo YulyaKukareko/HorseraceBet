@@ -1,8 +1,12 @@
 package by.epam.javawebtraining.kukareko.horseracebet.service;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.validator.FieldValidator.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.horsesp.HorseStartingPriceDAO;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.horsesp.HorseStartingPriceDAOImpl;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.HorseStartingPrice;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.IncorrectInputParamException;
 
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -13,9 +17,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class HorseStartingPriceService {
 
-    private HorseStartingPriceDAO spDAO;
-    private static HorseStartingPriceService service;
     private static final ReentrantLock LOCK = new ReentrantLock();
+
+    private static HorseStartingPriceService service;
+
+    private HorseStartingPriceDAO spDAO;
 
     private HorseStartingPriceService() {
         spDAO = HorseStartingPriceDAOImpl.getInstance();
@@ -32,39 +38,54 @@ public class HorseStartingPriceService {
         return service;
     }
 
-    public boolean save(HorseStartingPrice sp) {
-        return spDAO.save(sp);
+    public void save(HorseStartingPrice sp) throws HorseRaceBetException {
+        validateHorseStartingPriceObject(sp);
+
+        spDAO.save(sp);
     }
 
-    public boolean delete(HorseStartingPrice race) {
-        return spDAO.delete(race);
+    public void delete(HorseStartingPrice sp) throws HorseRaceBetException {
+        validateId(sp.getId());
+
+        spDAO.delete(sp);
     }
 
-    public boolean update(HorseStartingPrice race) {
-        return spDAO.update(race);
+    public void update(HorseStartingPrice sp) throws HorseRaceBetException {
+        validateHorseStartingPriceObject(sp);
+        validateId(sp.getId());
+
+        spDAO.update(sp);
     }
 
-    public List<HorseStartingPrice> getAll() {
+    public List<HorseStartingPrice> getAll() throws HorseRaceBetException {
         return spDAO.getAll();
     }
 
-    public HorseStartingPrice getById(Long id) {
+    public HorseStartingPrice getById(Long id) throws HorseRaceBetException {
+        validateId(id);
+
         return spDAO.getById(id);
     }
 
-    public List<HorseStartingPrice> getJoinFirstHorsesBet() {
+    public List<HorseStartingPrice> getJoinFirstHorsesBet() throws HorseRaceBetException {
         return spDAO.getJoinFirstHorsesBet();
     }
 
-    public List<HorseStartingPrice> getJoinSecondHorsesBet() {
+    public List<HorseStartingPrice> getJoinSecondHorsesBet() throws HorseRaceBetException {
         return spDAO.getJoinSecondHorsesBet();
     }
 
-    public List<HorseStartingPrice> getByRaceId(Long raceId) {
+    public List<HorseStartingPrice> getByRaceId(Long raceId) throws HorseRaceBetException {
         return spDAO.getByRaceId(raceId);
     }
 
-    public Integer getCountByRaceId(Long raceId) {
+    public Integer getCountByRaceId(Long raceId) throws HorseRaceBetException {
         return spDAO.getCountByRaceId(raceId);
+    }
+
+    private void validateHorseStartingPriceObject(HorseStartingPrice sp) throws IncorrectInputParamException {
+        validateId(sp.getRaceId());
+        validateId(sp.getHorseId());
+        validateCoefficient(sp.getSp());
     }
 }

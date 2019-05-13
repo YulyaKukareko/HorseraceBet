@@ -2,6 +2,7 @@ package by.epam.javawebtraining.kukareko.horseracebet.dao.result;
 
 import by.epam.javawebtraining.kukareko.horseracebet.dao.DAO;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Result;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
 
 import java.util.List;
 
@@ -10,5 +11,5 @@ import java.util.List;
  * @version 1.0 24 Apr 2019
  */
 public interface ResultDAO extends DAO<Result, Long> {
-    List<Result> getByRaceId(long raceId);
+    List<Result> getByRaceId(long raceId) throws HorseRaceBetException;
 }

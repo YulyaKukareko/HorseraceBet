@@ -10,7 +10,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ConfigurationManager {
 
-    private static final String BUNDLE_NAME = "config";
     private static ConfigurationManager instance;
     private static final ReentrantLock LOCK = new ReentrantLock();
 
@@ -24,7 +23,7 @@ public class ConfigurationManager {
             LOCK.lock();
             if (instance == null) {
                 instance = new ConfigurationManager();
-                instance.resourceBundle = ResourceBundle.getBundle(BUNDLE_NAME);
+                instance.resourceBundle = ResourceBundle.getBundle("config");
             }
             LOCK.unlock();
         }

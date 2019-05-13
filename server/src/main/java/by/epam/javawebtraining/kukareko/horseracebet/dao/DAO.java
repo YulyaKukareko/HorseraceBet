@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao;
 
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
+
 import java.util.List;
 
 /**
@@ -8,13 +10,13 @@ import java.util.List;
  */
 public interface DAO<T, K> {
 
-    T getById(K id);
+    T getById(K id) throws HorseRaceBetException;
 
-    List<T> getAll();
+    List<T> getAll() throws HorseRaceBetException;
 
-    boolean save(T entity);
+    void save(T entity) throws HorseRaceBetException;
 
-    boolean update(T entity);
+    void update(T entity) throws HorseRaceBetException;
 
-    boolean delete(T entity);
+    void delete(T entity) throws HorseRaceBetException;
 }

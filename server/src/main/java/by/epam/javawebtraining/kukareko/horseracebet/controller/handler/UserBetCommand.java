@@ -2,13 +2,17 @@ package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
 
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetAction;
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetParams;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
 import by.epam.javawebtraining.kukareko.horseracebet.service.UserBetService;
 import by.epam.javawebtraining.kukareko.horseracebet.service.UserService;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.UserBet;
+import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
 import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -18,16 +22,18 @@ import java.util.List;
  */
 public class UserBetCommand implements Command, GetAction, GetParams {
 
+    private static ConfigurationManager configurationManager;
+
     private UserBetService service;
-    private UserService userService;
 
     public UserBetCommand() {
         service = UserBetService.getInstance();
-        userService = UserService.getInstance();
+        configurationManager = ConfigurationManager.getInstance();
     }
 
     @Override
-    public JSONObject execute(HttpServletRequest request) {
+    public JSONObject execute(HttpServletRequest request, HttpServletResponse response) throws HorseRaceBetException {
+        String requestParamId = configurationManager.getProperty("params.id");
 
         JSONObject result = new JSONObject();
         UserBet userBet;
@@ -37,33 +43,27 @@ public class UserBetCommand implements Command, GetAction, GetParams {
                 userBet = new Gson().fromJson(getParam(request), UserBet.class);
 
                 HttpSession session = request.getSession();
-                long userId = (long) session.getAttribute("id");
+                long userId = (long) session.getAttribute(requestParamId);
                 userBet.setUserId(userId);
-                userService.makeBet(userId, userBet.getBetMoney());
 
-                addStatusResponse(result, service.save(userBet));
+                service.save(userBet);
                 break;
             case "getByUserId":
+                String responseParamResult = configurationManager.getProperty("configJSON.result");
+                String responseParamNoResult = configurationManager.getProperty("responseParam.noResult");
+
                 session = request.getSession();
-                userId = (long) session.getAttribute("id");
+                userId = (long) session.getAttribute(requestParamId);
                 List<UserBet> userBets = service.getByUserId(userId);
 
                 if (userBets != null) {
-                    result.put("result", new JSONArray(userBets));
+                    result.put(responseParamResult, new JSONArray(userBets));
                 } else {
-                    result.put("result", "no result");
+                    result.put(responseParamResult, responseParamNoResult);
                 }
                 break;
         }
 
         return result;
-    }
-
-    private void addStatusResponse(JSONObject json, boolean isSuccess) {
-        if (isSuccess) {
-            json.put("result", "success");
-        } else {
-            json.put("result", "failed");
-        }
     }
 }

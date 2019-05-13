@@ -10,30 +10,35 @@ import java.security.NoSuchAlgorithmException;
  * @version 1.0 03 Apr 2019
  */
 public class CryptMD5 {
-    private static MessageDigest md;
+
     private static final Logger LOGGER;
+    private static ConfigurationManager configurationManager;
 
     static {
-        LOGGER = Logger.getLogger("CryptMD5Logger");
+        LOGGER = Logger.getLogger("CryptMD5Log");
+        configurationManager = ConfigurationManager.getInstance();
     }
 
     public static String cryptWithMD5(String pass) {
+        StringBuilder sb = new StringBuilder();
+
         try {
-            md = MessageDigest.getInstance("MD5");
+            MessageDigest md;
+
+            String cryptoAlgorithm = configurationManager.getProperty("cryptoAlgorithm");
+            md = MessageDigest.getInstance(cryptoAlgorithm);
             byte[] passBytes = pass.getBytes();
 
             md.reset();
 
             byte[] digested = md.digest(passBytes);
-            StringBuffer sb = new StringBuffer();
 
-            for (int i = 0; i < digested.length; i++) {
-                sb.append(Integer.toHexString(0xff & digested[i]));
+            for (byte item : digested) {
+                sb.append(Integer.toHexString(0xff & item));
             }
-            return sb.toString();
         } catch (NoSuchAlgorithmException ex) {
             LOGGER.error(ex.getMessage());
         }
-        return null;
+        return sb.toString();
     }
 }

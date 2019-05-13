@@ -13,6 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class HorseBuilder extends AbstractBuilder<Horse> {
 
     private static final ReentrantLock LOCK;
+
     private static HorseBuilder instance;
 
     static {
@@ -36,6 +37,7 @@ public class HorseBuilder extends AbstractBuilder<Horse> {
     @Override
     public Horse getEntity(ResultSet rs) {
         Horse horse = null;
+
         try {
             horse = new Horse();
             horse.setId(rs.getLong("id"));

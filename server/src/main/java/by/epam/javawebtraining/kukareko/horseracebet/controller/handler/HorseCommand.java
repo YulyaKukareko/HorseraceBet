@@ -2,12 +2,16 @@ package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
 
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetAction;
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetParams;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
 import by.epam.javawebtraining.kukareko.horseracebet.service.HorseService;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Horse;
+import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
 import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -16,98 +20,105 @@ import java.util.List;
  */
 public class HorseCommand implements Command, GetParams, GetAction {
 
+    private static ConfigurationManager configurationManager;
+
     private HorseService service;
 
     public HorseCommand() {
         service = HorseService.getInstance();
+        configurationManager = ConfigurationManager.getInstance();
     }
 
     @Override
-    public JSONObject execute(HttpServletRequest request) {
+    public JSONObject execute(HttpServletRequest request, HttpServletResponse response) throws HorseRaceBetException {
+        String responseParamResult = configurationManager.getProperty("configJSON.result");
+        String requestParamRaceId = configurationManager.getProperty("requestParam.raceId");
+        String requestParamNoResult = configurationManager.getProperty("responseParam.noResult");
+
         JSONObject result = new JSONObject();
-        Horse horse;
 
         switch (getAction(request)) {
             case "create":
+                Horse horse;
                 horse = new Gson().fromJson(getParam(request), Horse.class);
 
-                addStatusResponse(result, service.save(horse));
+                service.save(horse);
                 break;
             case "delete":
-                horse = new Gson().fromJson(getParam(request), Horse.class);
+                    horse = new Gson().fromJson(getParam(request), Horse.class);
 
-                addStatusResponse(result, service.delete(horse));
+                service.delete(horse);
                 break;
             case "update":
                 horse = new Gson().fromJson(getParam(request), Horse.class);
 
-                addStatusResponse(result, service.update(horse));
+                service.update(horse);
                 break;
             case "getAll":
                 List<Horse> horses = service.getAll();
 
-                result.put("result", new JSONArray(horses));
+                result.put(responseParamResult, new JSONArray(horses));
                 break;
             case "getHorsesStartingPrices":
                 horses = service.getJoinHorseStartingPrice();
 
-                result.put("result", new JSONArray(horses));
+                result.put(responseParamResult, new JSONArray(horses));
                 break;
             case "getHorsesStartingPricesExcludingByRaceId":
                 JSONObject json = new JSONObject(getParam(request));
-                long raceId = Long.parseLong(json.get("raceId").toString());
+                long raceId = Long.parseLong(json.get(requestParamRaceId).toString());
+
                 horses = service.getJoinHorseStartingPriceExcludingByRaceId(raceId);
 
-                result.put("result", new JSONArray(horses));
+                result.put(responseParamResult, new JSONArray(horses));
                 break;
             case "getHorsesStartingPricesByRaceId":
                 json = new JSONObject(getParam(request));
-                raceId = Long.parseLong(json.get("raceId").toString());
+                raceId = Long.parseLong(json.get(requestParamRaceId).toString());
+
                 horses = service.getJoinHorseStartingPriceByRaceId(raceId);
 
-                result.put("result", new JSONArray(horses));
+                result.put(responseParamResult, new JSONArray(horses));
                 break;
             case "getHorsesFirstBets":
                 horses = service.getJoinFirstBetAndHorseStartingPrice();
 
-                result.put("result", new JSONArray(horses));
+                result.put(responseParamResult, new JSONArray(horses));
                 break;
             case "getHorsesSecondBets":
                 horses = service.getJoinSecondBetAndHorseStartingPrice();
 
-                result.put("result", new JSONArray(horses));
+                result.put(responseParamResult, new JSONArray(horses));
                 break;
             case "getHorsesStartingPricesByStartingPriceId":
+                String requestStartingSP = configurationManager.getProperty("responseParam.startingPriceId");
+
                 json = new JSONObject(getParam(request));
-                long startingPriceId = Long.parseLong(json.get("startingPriceId").toString());
+                long startingPriceId = Long.parseLong(json.get(requestStartingSP).toString());
+
                 horse = service.getJoinHorseStartingPriceByStartingPriceId(startingPriceId);
 
                 if (horse != null) {
-                    result.put("result", new JSONObject(horse));
+                    result.put(responseParamResult, new JSONObject(horse));
                 } else {
-                    result.put("result", "no result");
+                    result.put(responseParamResult, requestParamNoResult);
                 }
                 break;
             case "getById":
+                String requestParamId = configurationManager.getProperty("params.id");
+
                 json = new JSONObject(getParam(request));
-                long horseId = Long.parseLong(json.get("id").toString());
+                long horseId = Long.parseLong(json.get(requestParamId).toString());
+
                 horse = service.getById(horseId);
 
                 if (horse != null) {
-                    result.put("result", new JSONObject(horse));
+                    result.put(responseParamResult, new JSONObject(horse));
                 } else {
-                    result.put("result", "no result");
+                    result.put(responseParamResult, requestParamNoResult);
                 }
                 break;
         }
         return result;
-    }
-
-    private void addStatusResponse(JSONObject json, boolean isSuccess) {
-        if (isSuccess) {
-            json.put("result", "success");
-        } else {
-            json.put("result", "failed");
-        }
     }
 }

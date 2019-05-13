@@ -1,5 +1,8 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao;
 
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.DatabaseConnectionException;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.IncorrectInputParamException;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.TransactionNotCompleteException;
 import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
 import org.apache.log4j.Logger;
 
@@ -15,9 +18,9 @@ public class AbstractDAO {
 
     protected static final Logger LOGGER;
 
-    private PoolConnection pool;
     protected static ConfigurationManager configurationManager;
 
+    private PoolConnection pool;
 
     static {
         LOGGER = Logger.getLogger("DAOLayerLog");
@@ -28,24 +31,55 @@ public class AbstractDAO {
         pool = PoolConnection.getInstance();
     }
 
-    protected final ResultSet executeQuery(String query, Map<Integer, Object> params, boolean isExecuteQuery) throws SQLException {
-        ResultSet result = null;
+    protected final ResultSet executeProcedure(String procedureName, Map<Integer, Object> params, boolean isExecuteQuery) throws TransactionNotCompleteException {
+        ResultSet result;
         Connection connection = pool.getConnection();
-        PreparedStatement statement = connection.prepareStatement(query);
+
+        try {
+            CallableStatement statement = connection.prepareCall(procedureName);
+            result = executeQuery(statement, params, isExecuteQuery);
+
+        } catch (SQLException e) {
+            throw new TransactionNotCompleteException("Transaction not completed. Try again");
+        }
+        pool.releaseConnection(connection);
+
+        return result;
+    }
+
+    protected final ResultSet executeQuery(String query, Map<Integer, Object> params, boolean isExecuteQuery) throws IncorrectInputParamException, DatabaseConnectionException {
+        ResultSet result;
+        Connection connection = pool.getConnection();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            result = executeQuery(statement, params, isExecuteQuery);
+
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            throw new IncorrectInputParamException(configurationManager.getProperty("inputParametersIncorrectMessage"));
+        } catch (SQLException ex) {
+            LOGGER.error(ex.getMessage());
+            throw new DatabaseConnectionException(configurationManager.getProperty("databaseNotRespondingMessage"));
+        }
+        pool.releaseConnection(connection);
+
+        return result;
+    }
+
+    private ResultSet executeQuery(PreparedStatement statement, Map<Integer, Object> params, boolean isExecuteQuery) throws SQLException {
+        ResultSet result = null;
 
         if (params != null) {
             for (Map.Entry<Integer, Object> entry : params.entrySet()) {
                 defineFieldStatement(entry.getKey(), entry.getValue(), statement);
             }
         }
-
         if (isExecuteQuery) {
             result = statement.executeQuery();
         } else {
             statement.execute();
         }
 
-        pool.releaseConnection(connection);
         return result;
     }
 
@@ -70,6 +104,9 @@ public class AbstractDAO {
                 statement.setTimestamp(index, (Timestamp) param);
                 break;
             case "RaceType":
+                statement.setString(index, param.toString());
+                break;
+            case "Role":
                 statement.setString(index, param.toString());
                 break;
             case "BetType":

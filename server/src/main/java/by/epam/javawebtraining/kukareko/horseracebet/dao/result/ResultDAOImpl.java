@@ -5,6 +5,7 @@ import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.FactoryBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.TypeBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.AbstractDAO;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Result;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,15 +21,14 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ResultDAOImpl extends AbstractDAO implements ResultDAO {
 
-    private static ResultDAOImpl dao;
     private static final ReentrantLock LOCK = new ReentrantLock();
-    private static final AbstractBuilder builder;
 
-    static {
-        builder = FactoryBuilder.getBuilder(TypeBuilder.RESULT);
-    }
+    private static ResultDAOImpl dao;
+
+    private AbstractBuilder builder;
 
     private ResultDAOImpl() {
+        builder = FactoryBuilder.getBuilder(TypeBuilder.RESULT);
     }
 
     public static ResultDAOImpl getInstance() {
@@ -43,14 +43,14 @@ public class ResultDAOImpl extends AbstractDAO implements ResultDAO {
     }
 
     @Override
-    public Result getById(Long id) {
+    public Result getById(Long id) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, id);
         Result result = null;
 
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectResultById"), queryParams, true);
         try {
-            ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectResultById"), queryParams, true);
-            if ((rs != null) && (rs.next())) {
+            if (rs.next()) {
                 result = (Result) builder.getEntity(rs);
             }
         } catch (SQLException ex) {
@@ -60,77 +60,50 @@ public class ResultDAOImpl extends AbstractDAO implements ResultDAO {
     }
 
     @Override
-    public List<Result> getAll() {
-        ResultSet rs;
-        List<Result> results = new ArrayList<>();
+    public List<Result> getAll() throws HorseRaceBetException {
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectResult"), null, true);
 
-        try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectResult"), null, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    results.add((Result) builder.getEntity(rs));
-                }
-            }
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-        }
-        return results;
+        return getResults(rs);
     }
 
     @Override
-    public boolean save(Result result) {
+    public void save(Result result) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(result);
 
-        try {
-            executeQuery(configurationManager.getProperty("SQL.insertResult"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
+        executeQuery(configurationManager.getProperty("SQL.insertResult"), queryParams, false);
     }
 
     @Override
-    public boolean update(Result result) {
+    public void update(Result result) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(result);
         queryParams.put(4, result.getId());
 
-        try {
-            executeQuery(configurationManager.getProperty("SQL.updateResult"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
+        executeQuery(configurationManager.getProperty("SQL.updateResult"), queryParams, false);
     }
 
     @Override
-    public boolean delete(Result result) {
+    public void delete(Result result) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, result.getId());
 
-        try {
-            executeQuery(configurationManager.getProperty("SQL.deleteResult"), queryParams, false);
-        } catch (SQLException ex) {
-            LOGGER.error(ex.getMessage());
-            return false;
-        }
-        return true;
+        executeQuery(configurationManager.getProperty("SQL.deleteResult"), queryParams, false);
     }
 
     @Override
-    public List<Result> getByRaceId(long raceId) {
-        ResultSet rs;
-        List<Result> results = new ArrayList<>();
+    public List<Result> getByRaceId(long raceId) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, raceId);
 
+        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectResultByRaceId"), queryParams, true);
+        return getResults(rs);
+    }
+
+    private List<Result> getResults(ResultSet rs) {
+        List<Result> results = new ArrayList<>();
+
         try {
-            rs = executeQuery(configurationManager.getProperty("SQL.selectResultByRaceId"), queryParams, true);
-            if (rs != null) {
-                while (rs.next()) {
-                    results.add((Result) builder.getEntity(rs));
-                }
+            while (rs.next()) {
+                results.add((Result) builder.getEntity(rs));
             }
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());

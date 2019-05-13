@@ -1,9 +1,13 @@
 package by.epam.javawebtraining.kukareko.horseracebet.service;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.validator.FieldValidator.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.bet.BetDAO;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.bet.BetDAOImpl;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Bet;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.BetType;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.IncorrectInputParamException;
 
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -14,9 +18,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class BetService {
 
-    private BetDAO betDAO;
-    private static BetService service;
     private static final ReentrantLock LOCK = new ReentrantLock();
+
+    private static BetService service;
+
+    private BetDAO betDAO;
 
     private BetService() {
         betDAO = BetDAOImpl.getInstance();
@@ -33,27 +39,46 @@ public class BetService {
         return service;
     }
 
-    public boolean save(Bet bet) {
-        return betDAO.save(bet);
+    public void save(Bet bet) throws HorseRaceBetException {
+        validateBetObject(bet);
+
+        betDAO.save(bet);
     }
 
-    public boolean delete(Bet bet) {
-        return betDAO.delete(bet);
+    public void delete(Bet bet) throws HorseRaceBetException {
+        validateId(bet.getId());
+
+        betDAO.delete(bet);
     }
 
-    public boolean update(Bet bet) {
-        return betDAO.update(bet);
+    public void update(Bet bet) throws HorseRaceBetException {
+        validateBetObject(bet);
+        validateId(bet.getId());
+
+        betDAO.update(bet);
     }
 
-    public List<Bet> getAll() {
+    public List<Bet> getAll() throws HorseRaceBetException {
         return betDAO.getAll();
     }
 
-    public List<Bet> getByRaceIdAndBetType(long raceId, BetType type, Long userId) {
+    public List<Bet> getByRaceIdAndBetType(long raceId, BetType type, Long userId) throws HorseRaceBetException {
+        validateId(raceId);
+        validateId(userId);
+
         return betDAO.getByRaceIdAndBetType(raceId, type, userId);
     }
 
-    public Bet getById(Long id) {
+    public Bet getById(Long id) throws HorseRaceBetException {
+        validateId(id);
+
         return betDAO.getById(id);
+    }
+
+    private void validateBetObject(Bet bet) throws IncorrectInputParamException {
+        validateId(bet.getFirstStartingPriceHorseId());
+        validateCoefficient(bet.getCoefficient());
+        validateEnum(bet.getType());
+        validateSecondHorseId(bet.getSecondStartingPriceHorseId());
     }
 }

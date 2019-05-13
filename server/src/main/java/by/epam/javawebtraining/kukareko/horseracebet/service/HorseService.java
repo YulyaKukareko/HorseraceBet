@@ -1,8 +1,12 @@
 package by.epam.javawebtraining.kukareko.horseracebet.service;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.validator.FieldValidator.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.horse.HorseDAO;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.horse.HorseDAOImpl;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Horse;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.IncorrectInputParamException;
 
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -13,9 +17,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class HorseService {
 
-    private HorseDAO horseDAO;
-    private static HorseService service;
     private static final ReentrantLock LOCK = new ReentrantLock();
+
+    private static HorseService service;
+
+    private HorseDAO horseDAO;
 
     private HorseService() {
         horseDAO = HorseDAOImpl.getInstance();
@@ -32,47 +38,69 @@ public class HorseService {
         return service;
     }
 
-    public boolean save(Horse horse) {
-        return horseDAO.save(horse);
+    public void save(Horse horse) throws HorseRaceBetException {
+        validateHorseObject(horse);
+
+        horseDAO.save(horse);
     }
 
-    public boolean delete(Horse horse) {
-        return horseDAO.delete(horse);
+    public void delete(Horse horse) throws HorseRaceBetException {
+        validateId(horse.getId());
+
+        horseDAO.delete(horse);
     }
 
-    public boolean update(Horse horse) {
-        return horseDAO.update(horse);
+    public void update(Horse horse) throws HorseRaceBetException {
+        validateHorseObject(horse);
+        validateId(horse.getId());
+
+        horseDAO.update(horse);
     }
 
-    public List<Horse> getAll() {
+    public List<Horse> getAll() throws HorseRaceBetException {
         return horseDAO.getAll();
     }
 
-    public Horse getById(Long id) {
+    public Horse getById(Long id) throws HorseRaceBetException {
+        validateId(id);
+
         return horseDAO.getById(id);
     }
 
-    public List<Horse> getJoinFirstBetAndHorseStartingPrice() {
+    public List<Horse> getJoinFirstBetAndHorseStartingPrice() throws HorseRaceBetException {
         return horseDAO.getJoinFirstHorseBetAndHorseStartingPrice();
     }
 
-    public List<Horse> getJoinSecondBetAndHorseStartingPrice() {
+    public List<Horse> getJoinSecondBetAndHorseStartingPrice() throws HorseRaceBetException {
         return horseDAO.getJoinSecondHorseBetAndHorseStartingPrice();
     }
 
-    public List<Horse> getJoinHorseStartingPriceByRaceId(Long raceId) {
+    public List<Horse> getJoinHorseStartingPriceByRaceId(Long raceId) throws HorseRaceBetException {
+        validateId(raceId);
+
         return horseDAO.getJoinHorseStartingPriceByRaceId(raceId);
     }
 
-    public List<Horse> getJoinHorseStartingPriceExcludingByRaceId(Long raceId) {
+    public List<Horse> getJoinHorseStartingPriceExcludingByRaceId(Long raceId) throws HorseRaceBetException {
+        validateId(raceId);
+
         return horseDAO.getJoinHorseStartingPriceExcludingByRaceId(raceId);
     }
 
-    public List<Horse> getJoinHorseStartingPrice() {
+    public List<Horse> getJoinHorseStartingPrice() throws HorseRaceBetException {
         return horseDAO.getJoinHorseStartingPrice();
     }
 
-    public Horse getJoinHorseStartingPriceByStartingPriceId(Long startingPriceId) {
+    public Horse getJoinHorseStartingPriceByStartingPriceId(Long startingPriceId) throws HorseRaceBetException {
+        validateId(startingPriceId);
+
         return horseDAO.getJoinHorseStartingPriceByStartingPriceId(startingPriceId);
+    }
+
+    private void validateHorseObject(Horse horse) throws IncorrectInputParamException {
+        validateName(horse.getName());
+        validateName(horse.getTrainer());
+        validateName(horse.getJockey());
+        validateWeightOrDistance(horse.getWeight());
     }
 }

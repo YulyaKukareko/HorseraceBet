@@ -1,12 +1,14 @@
 package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
 
-import by.epam.javawebtraining.kukareko.horseracebet.controller.GetAction;
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetParams;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
 import by.epam.javawebtraining.kukareko.horseracebet.service.UserService;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.User;
 import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
 import org.json.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -15,25 +17,28 @@ import javax.servlet.http.HttpSession;
  */
 public class SignInCommand implements Command, GetParams {
 
+    private static ConfigurationManager configurationManager;
+
     private UserService service;
 
     public SignInCommand() {
         service = UserService.getInstance();
+        configurationManager = ConfigurationManager.getInstance();
     }
 
-    private static final ConfigurationManager configurationManager = ConfigurationManager.getInstance();
-    private static final String LOGIN_FIELD_REQUEST = configurationManager.getProperty("login");
-    private static final String PASSWORD_FIELD_REQUEST = configurationManager.getProperty("password");
-
     @Override
-    public JSONObject execute(HttpServletRequest request) {
+    public JSONObject execute(HttpServletRequest request, HttpServletResponse response) throws HorseRaceBetException {
+        String requestParamLogin = configurationManager.getProperty("requestParam.login");
+        String requestParamPassword = configurationManager.getProperty("requestParam.password");
+        String responseParamAuthorization = configurationManager.getProperty("responseParam.authorization");
+
         JSONObject userDetails = new JSONObject(getParam(request));
-        String login = userDetails.getString(LOGIN_FIELD_REQUEST);
-        String password = userDetails.getString(PASSWORD_FIELD_REQUEST);
+        String login = userDetails.getString(requestParamLogin);
+        String password = userDetails.getString(requestParamPassword);
+        JSONObject result = new JSONObject();
 
         User user = service.checkUser(login, password);
 
-        JSONObject result = new JSONObject();
         if (user != null) {
 
             HttpSession oldSession = request.getSession(false);
@@ -45,11 +50,19 @@ public class SignInCommand implements Command, GetParams {
             int maxInactiveIntervalSession = -1;
             newSession.setMaxInactiveInterval(maxInactiveIntervalSession);
 
-            newSession.setAttribute("id", user.getId());
-            result.put("authorization", "success");
-            result.put("role", user.getRole());
+            String statusRespSuccess = configurationManager.getProperty("responseParam.status.success");
+
+            result.put(responseParamAuthorization, statusRespSuccess);
+
+            String sessionParamId = configurationManager.getProperty("params.id");
+            String responseParamRole = configurationManager.getProperty("responseParam.role");
+
+            newSession.setAttribute(sessionParamId, user.getId());
+            result.put(responseParamRole, user.getRole());
         } else {
-            result.put("authorization", "failed");
+            String statusRespFailed = configurationManager.getProperty("responseParam.status.failed");
+
+            result.put(responseParamAuthorization, statusRespFailed);
         }
 
         return result;

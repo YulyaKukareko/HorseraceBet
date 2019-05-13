@@ -31,7 +31,6 @@ public class HorseStartingPrice {
         this.id = id;
     }
 
-
     public long getRaceId() {
         return raceId;
     }

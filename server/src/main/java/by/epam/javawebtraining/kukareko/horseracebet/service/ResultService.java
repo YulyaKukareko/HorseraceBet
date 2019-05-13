@@ -1,8 +1,12 @@
 package by.epam.javawebtraining.kukareko.horseracebet.service;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.validator.FieldValidator.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.result.ResultDAO;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.result.ResultDAOImpl;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Result;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.IncorrectInputParamException;
 
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
@@ -13,9 +17,11 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class ResultService {
 
-    private ResultDAO resultDAO;
-    private static ResultService service;
     private static final ReentrantLock LOCK = new ReentrantLock();
+
+    private static ResultService service;
+
+    private ResultDAO resultDAO;
 
     private ResultService() {
         resultDAO = ResultDAOImpl.getInstance();
@@ -32,11 +38,21 @@ public class ResultService {
         return service;
     }
 
-    public boolean save(Result result) {
-        return resultDAO.save(result);
+    public void save(Result result) throws HorseRaceBetException {
+        validateResultObj(result);
+
+        resultDAO.save(result);
     }
 
-    public List<Result> getByRaceId(Long raceId){
+    public List<Result> getByRaceId(Long raceId) throws HorseRaceBetException {
+        validateId(raceId);
+
         return resultDAO.getByRaceId(raceId);
+    }
+
+    private void validateResultObj(Result result) throws IncorrectInputParamException {
+        validateId(result.getRaceId());
+        validateId(result.getRaceId());
+        validatePlace(result.getPlace());
     }
 }

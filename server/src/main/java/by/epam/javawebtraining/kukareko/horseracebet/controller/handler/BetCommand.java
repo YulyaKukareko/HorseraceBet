@@ -2,12 +2,16 @@ package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
 
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetAction;
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetParams;
+import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
 import by.epam.javawebtraining.kukareko.horseracebet.service.BetService;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.*;
+import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
 import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.List;
@@ -18,69 +22,69 @@ import java.util.List;
  */
 public class BetCommand implements Command, GetAction, GetParams {
 
+    private static ConfigurationManager configurationManager;
+
     private BetService service;
 
     public BetCommand() {
         service = BetService.getInstance();
+        configurationManager = ConfigurationManager.getInstance();
     }
 
     @Override
-    public JSONObject execute(HttpServletRequest request) {
+    public JSONObject execute(HttpServletRequest request, HttpServletResponse response) throws HorseRaceBetException {
+        String responseParamResult = configurationManager.getProperty("configJSON.result");
+
         JSONObject result = new JSONObject();
 
         switch (getAction(request)) {
             case "create":
                 Bet bet = new Gson().fromJson(getParam(request), Bet.class);
 
-                addStatusResponse(result, service.save(bet));
-                break;
-            case "delete":
-                bet = new Gson().fromJson(getParam(request), Bet.class);
-
-                addStatusResponse(result, service.delete(bet));
+                service.save(bet);
                 break;
             case "getAll":
                 List<Bet> bets = service.getAll();
 
-                result.put("result", new JSONArray(bets));
+                result.put(responseParamResult, new JSONArray(bets));
                 break;
             case "update":
                 bet = new Gson().fromJson(getParam(request), Bet.class);
 
-                addStatusResponse(result, service.update(bet));
+                service.update(bet);
                 break;
             case "getById":
+                String betIdParam = configurationManager.getProperty("requestParam.betId");
+
                 JSONObject json = new JSONObject(getParam(request));
-                long betId = Long.parseLong(json.get("betId").toString());
+                long betId = Long.parseLong(json.get(betIdParam).toString());
 
                 bet = service.getById(betId);
 
-                result.put("result", new JSONObject(bet));
+                result.put(responseParamResult, new JSONObject(bet));
                 break;
             case "getAllByRaceIdAndBetType":
+                String requestParamId = configurationManager.getProperty("params.id");
+                String requestParamRaceId = configurationManager.getProperty("requestParam.raceId");
+                String requestParamBetType = configurationManager.getProperty("requestParam.betType");
+
                 json = new JSONObject(getParam(request));
                 HttpSession session = request.getSession();
-                long userId = (long) session.getAttribute("id");
-                long raceId = Long.parseLong(json.get("raceId").toString());
-                BetType betType = BetType.valueOf(json.getString("betType"));
+
+                long userId = (long) session.getAttribute(requestParamId);
+                long raceId = Long.parseLong(json.get(requestParamRaceId).toString());
+                BetType betType = BetType.valueOf(json.getString(requestParamBetType));
 
                 bets = service.getByRaceIdAndBetType(raceId, betType, userId);
-                result.put("result", new JSONArray(bets));
+                result.put(responseParamResult, new JSONArray(bets));
                 break;
             case "getAllTypes":
                 List<BetType> types = Arrays.asList(BetType.values());
 
-                result.put("result", new JSONArray(types));
+                result.put(responseParamResult, new JSONArray(types));
                 break;
         }
-        return result;
-    }
 
-    private void addStatusResponse(JSONObject json, boolean isSuccess) {
-        if (isSuccess) {
-            json.put("result", "success");
-        } else {
-            json.put("result", "failed");
-        }
+        return result;
     }
 }

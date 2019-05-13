@@ -13,6 +13,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ResultBuilder extends AbstractBuilder<Result> {
 
     private static final ReentrantLock LOCK;
+
     private static ResultBuilder instance;
 
     static {
@@ -36,6 +37,7 @@ public class ResultBuilder extends AbstractBuilder<Result> {
     @Override
     public Result getEntity(ResultSet rs) {
         Result resultRace = null;
+
         try {
             resultRace = new Result();
             resultRace.setId(rs.getLong("id"));

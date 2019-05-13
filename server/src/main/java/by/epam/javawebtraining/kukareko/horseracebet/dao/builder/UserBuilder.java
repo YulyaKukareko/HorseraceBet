@@ -14,6 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class UserBuilder extends AbstractBuilder<User> {
 
     private static final ReentrantLock LOCK;
+
     private static UserBuilder instance;
 
     static {
@@ -37,14 +38,15 @@ public class UserBuilder extends AbstractBuilder<User> {
     @Override
     public User getEntity(ResultSet rs) {
         User user = null;
+
         try {
             user = new User();
             user.setId(rs.getLong("id"));
-            user.setLogin(rs.getString("login"));
+            user.setEmail(rs.getString("email"));
             user.setFirstName(rs.getString("first_name"));
             user.setLastName(rs.getString("last_name"));
             user.setBalance(rs.getBigDecimal("balance"));
-            user.setCountry(rs.getString("country"));
+            user.setCountryId(rs.getLong("country_id"));
             user.setRole(Role.valueOf(rs.getString("role").toUpperCase()));
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
