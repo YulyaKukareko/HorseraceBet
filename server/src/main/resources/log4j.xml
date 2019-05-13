@@ -4,7 +4,7 @@
 
     <appender name="POOL_CONNECTION" class="org.apache.log4j.FileAppender">
 
-        <param name="file" value="${CATALINA_BASE}/conf/poolConnectionLog.properties"/>
+        <param name="file" value="src/main/resources/log/poolConnectionLog.log"/>
         <param name="immediateFlush" value="true"/>
         <param name="threshold" value="debug"/>
         <param name="append" value="false"/>
@@ -16,7 +16,7 @@
 
     <appender name="DAO_LOGGER" class="org.apache.log4j.FileAppender">
 
-        <param name="file" value="${CATALINA_BASE}/conf/daoLog.properties"/>
+        <param name="file" value="src/main/resources/log/daoLog.log"/>
         <param name="immediateFlush" value="true"/>
         <param name="threshold" value="debug"/>
         <param name="append" value="false"/>
@@ -26,9 +26,83 @@
         </layout>
     </appender>
 
+    <appender name="CRYPTO_LOGGER" class="org.apache.log4j.FileAppender">
+
+        <param name="file" value="src/main/resources/log/cryptoMD5Log.log"/>
+        <param name="immediateFlush" value="true"/>
+        <param name="threshold" value="debug"/>
+        <param name="append" value="false"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="conversionPattern" value="%m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="LOGIN_CONTROLLER" class="org.apache.log4j.FileAppender">
+
+        <param name="file" value="src/main/resources/log/loginControllerLog.log"/>
+        <param name="immediateFlush" value="true"/>
+        <param name="threshold" value="debug"/>
+        <param name="append" value="false"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="conversionPattern" value="%m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="JOSN_PARSER" class="org.apache.log4j.FileAppender">
+
+        <param name="file" value="src/main/resources/log/jsonParserLog.log"/>
+        <param name="immediateFlush" value="true"/>
+        <param name="threshold" value="debug"/>
+        <param name="append" value="false"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="conversionPattern" value="%m%n"/>
+        </layout>
+    </appender>
+
+    <appender name="BUILDER" class="org.apache.log4j.FileAppender">
+
+        <param name="file" value="src/main/resources/log/builderLog.log"/>
+        <param name="immediateFlush" value="true"/>
+        <param name="threshold" value="debug"/>
+        <param name="append" value="false"/>
+
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="conversionPattern" value="%m%n"/>
+        </layout>
+    </appender>
+
+    <logger name="PoolConnectionLog" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="CRYPTO_LOGGER"/>
+    </logger>
+
     <logger name="DAOLayerLog" additivity="false">
         <level value="DEBUG"/>
         <appender-ref ref="DAO_LOGGER"/>
     </logger>
+
+    <logger name="CryptMD5Log" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="CRYPTO_LOGGER"/>
+    </logger>
+
+    <logger name="LoginControllerLog" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="LOGIN_CONTROLLER"/>
+    </logger>
+
+    <logger name="JSONParserLog" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="JOSN_PARSER"/>
+    </logger>
+
+    <logger name="BuilderLog" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="BUILDER"/>
+    </logger>
+
 
 </log4j:configuration>
