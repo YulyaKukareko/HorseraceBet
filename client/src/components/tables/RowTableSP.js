@@ -14,13 +14,14 @@ class RowTableSP extends Component {
                 <td>{this.props.horse.id}</td>
                 <td>{this.props.horse.name}</td>
                 <td>{this.props.race.id}</td>
-                <td>{this.props.race.location}</td>
+                <td>{this.props.race.name}</td>
                 <td>{this.props.value.sp}</td>
                 <EditButtons value={{
                     id: this.props.value.id,
                     raceId: this.props.race.id,
                     horseId: this.props.horse.id,
                     name: this.props.horse.name,
+                    raceName: this.props.race.name,
                     location: this.props.race.location,
                     sp: this.props.value.sp
                 }} editItem={this.props.editItem} deleteItem={this.props.deleteItem}/>
@@ -28,6 +29,5 @@ class RowTableSP extends Component {
         )
     }
 }
-
 
 export default RowTableSP;

@@ -5,17 +5,19 @@ import axios from 'axios';
 import Table from "../components/tables/template/Table";
 import EditTable from '../components/editors/EditTable';
 import {withTranslation} from "react-i18next";
+import getLocalizationErrorMessage from '../common/APIUtils';
 
 class EditTableBet extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
             id: "",
             availableHorses: [],
             availableRaces: [],
             startingPrices: [],
-            location: "",
+            name: "",
             type: "",
             time: 0,
             firstHorseStartingPriceId: "",
@@ -36,17 +38,24 @@ class EditTableBet extends Component {
             startingPricesBetFirstHorse: [],
             startingPricesBetSecondHorse: [],
             betTypes: [],
-            currentRace: {}
+            currentRace: "",
+            currentRaceId: "",
+            translate: this.props.t,
+            ajaxError: ""
         };
+        this.props.validator.hideMessages();
+        this.props.validator.purgeFields();
     }
 
-    componentDidMount() {
+    componentWillMount() {
         axios.get(Config.GET_RACES_EXCLUDING_RESULT).then((resp) => {
             this.setState({availableRaces: resp.data.result});
         });
+
         axios.get(Config.GET_BETS_TYPE).then((resp) => {
             this.setState({betTypes: resp.data.result});
         });
+
         this.getMainContent();
     }
 
@@ -54,15 +63,18 @@ class EditTableBet extends Component {
         await this.setState({
             firstStartingPriceHorseId: [], secondStartingPriceHorseId: [], startingPricesBetFirstHorse: [],
             startingPricesBetSecondHorse: [], secondHorsesBet: [], firstHorsesBet: [], racesBet: []
-        })
+        });
+
         await axios.get(Config.GET_BETS).then((resp) => {
             this.setState({bets: resp.data.result});
         });
+
         let startingPricesBetFirstHorsePromises = [];
         let startingPricesBetSecondHorsePromises = [];
+
         this.state.bets.map((value) => {
             startingPricesBetFirstHorsePromises.push(axios.post(Config.GET_SP_BY_ID, {id: value.firstStartingPriceHorseId}));
-            startingPricesBetSecondHorsePromises.push(axios.post(Config.GET_SP_BY_ID, {id: value.secondStartingPriceHorseId}));
+            value.secondStartingPriceHorseId !== 0 ? startingPricesBetSecondHorsePromises.push(axios.post(Config.GET_SP_BY_ID, {id: value.secondStartingPriceHorseId})) : null;
         });
         await axios.all(startingPricesBetFirstHorsePromises)
             .then((resp) => {
@@ -72,9 +84,11 @@ class EditTableBet extends Component {
             .then((resp) => {
                 resp.map((value) => this.setState({startingPricesBetSecondHorse: [...this.state.startingPricesBetSecondHorse, value.data.result]}));
             });
+
         let firstHorsesBetPromises = [];
         let secondHorsesBetPromises = [];
         let racesBetPromises = [];
+
         this.state.startingPricesBetFirstHorse.map((value) => {
             firstHorsesBetPromises.push(axios.post(Config.GET_HORSE_BY_ID, {id: value.horseId}));
             racesBetPromises.push(axios.post(Config.GET_RACE_BY_ID, {id: value.raceId}));
@@ -116,7 +130,7 @@ class EditTableBet extends Component {
 
     handleChange = (event) => {
         if (event.target.name === "type") {
-            if ((event.target.value !== "OPPOSITE") || (event.target.value !== "EXACTA")) {
+            if ((event.target.value !== "OPPOSITE") && (event.target.value !== "EXACTA")) {
                 this.setState({
                     secondHorseName: "-",
                     secondHorseJockey: "-",
@@ -125,6 +139,7 @@ class EditTableBet extends Component {
                 });
             }
         }
+
         this.setState({[event.target.name]: event.target.value});
     };
 
@@ -142,64 +157,79 @@ class EditTableBet extends Component {
             secondHorseStartingPriceId: obj.secondHorseStartingPriceId,
             secondHorseName: obj.secondHorseName,
             secondHorseJockey: obj.secondHorseJockey,
-            secondHorseSP: obj.secondHorseSP
+            secondHorseSP: obj.secondHorseSP,
+            currentRaceId: obj.currentRace.id
         });
     };
 
-    deleteBet = (obj) => {
-        axios.post(Config.DELETE_BET, obj)
-            .then((resp) => {
-                if (resp.data.result === "success") {
-                    let index = this.state.bets.findIndex(item => item.id === obj.id);
-                    let middleArray = this.state.bets;
-                    middleArray.splice(index, 1);
-                    this.setState({bets: middleArray});
-                }
-            })
-    };
-
     createBet = () => {
-        let bet = {
-            type: this.state.type.toUpperCase(),
-            firstStartingPriceHorseId: this.state.firstHorseStartingPriceId,
-            secondStartingPriceHorseId: this.state.type === "OPPOSITE" || this.state.type === "EXACTA" ? this.state.secondHorseStartingPriceId : -1,
-            coefficient: this.state.coefficient
-        };
+        this.props.validator.showMessages();
 
-        axios.post(Config.CREATE_BET, bet)
-            .then((resp) => {
-                if (resp.data.result === "success") {
-                    this.setState({
-                        firstHorsesBet: [], secondHorsesBet: [], startingPricesBetFirstHorse: [],
-                        startingPricesBetSecondHorse: [], racesBet: [], bets: []
-                    }, () => {
-                        this.getMainContent();
-                    });
-                }
-            });
+        if (this.props.validator.allValid()) {
+            let bet = {
+                type: this.state.type.toUpperCase(),
+                firstStartingPriceHorseId: this.state.firstHorseStartingPriceId,
+                secondStartingPriceHorseId: this.state.type === "OPPOSITE" || this.state.type === "EXACTA" ? this.state.secondHorseStartingPriceId : 0,
+                coefficient: this.state.coefficient
+            };
+
+            axios.post(Config.CREATE_BET, bet)
+                .then((resp) => {
+                    if (resp.data.status === "success") {
+                        this.setState({ajaxError: ""});
+                        this.setState({
+                            firstHorsesBet: [], secondHorsesBet: [], startingPricesBetFirstHorse: [],
+                            startingPricesBetSecondHorse: [], racesBet: [], bets: []
+                        }, () => {
+                            this.getMainContent();
+                        });
+                    } else {
+                        this.setState({ajaxError: getLocalizationErrorMessage(this.state.translate, resp.data.errorMes)});
+                    }
+                });
+        } else {
+            this.forceUpdate();
+        }
     };
 
     updateBet = () => {
-        let updateBet = {
-            id: this.state.id,
-            type: this.state.type.toUpperCase(),
-            firstStartingPriceHorseId: this.state.firstHorseStartingPriceId,
-            secondStartingPriceHorseId: this.state.secondHorseStartingPriceId,
-            coefficient: this.state.coefficient
-        };
+        this.props.validator.showMessages();
 
-        axios.post(Config.UPDATE_BET, updateBet)
-            .then(() => {
-                updateBet.type = updateBet.type.charAt(0) + updateBet.type.slice(1).toLowerCase();
-                this.setState({
-                    bets: this.state.bets.map(el => (el.id === updateBet.id ? updateBet : el))
+        if (this.props.validator.allValid()) {
+            let updateBet = {
+                id: this.state.id,
+                type: this.state.type.toUpperCase(),
+                firstStartingPriceHorseId: this.state.firstHorseStartingPriceId,
+                secondStartingPriceHorseId: this.state.type === "OPPOSITE" || this.state.type === "EXACTA" ?
+                    this.state.secondHorseStartingPriceId : 0,
+                coefficient: this.state.coefficient
+            };
+
+            axios.post(Config.UPDATE_BET, updateBet)
+                .then((resp) => {
+                    if (resp.data.status === "success") {
+                        this.setState({ajaxError: ""});
+                        this.setState({
+                            bets: this.state.bets.map(el => (el.id === updateBet.id ? updateBet : el))
+                        });
+                    } else {
+                        this.setState({ajaxError: getLocalizationErrorMessage(resp.data.errorMes)});
+                    }
                 });
-            });
+        } else {
+            this.forceUpdate();
+        }
     };
 
     getBetsInfo = (event) => {
         this.setState({startingPrices: [], availableHorses: []});
-        this.setState({currentRace: this.state.availableRaces[event.target.value]}, () => {
+        this.setState({currentRaceId: event.target.value});
+
+        let race = this.state.availableRaces.find(el => {
+            return el.id == event.target.value
+        });
+
+        this.setState({currentRace: race}, () => {
             let race = {
                 raceId: this.state.currentRace.id
             };
@@ -220,99 +250,132 @@ class EditTableBet extends Component {
     };
 
     render() {
-        const {t} = this.props;
+        const t = this.state.translate;
+
         return (
             <React.Fragment>
-                <div className="sub_table_bet">
-                    {this.state.bets.length !== 0 &&
-                    <Table routerPath={"/bet"} header={t('TABLE_BET_COLUMNS', {returnObjects: true})}
-                           data={this.state.bets}
-                           firstHorsesBet={this.state.firstHorsesBet}
-                           secondHorsesBet={this.state.secondHorsesBet}
-                           firstHorseStaringPrices={this.state.startingPricesBetFirstHorse}
-                           secondHorseStaringPrices={this.state.startingPricesBetSecondHorse}
-                           races={this.state.racesBet}
-                           editItem={this.editBet}
-                           deleteItem={this.deleteBet}/>}
-                </div>
-                <select className="form-control race_select_bet" placeholder={"Choose race"}
-                        onChange={(e) => this.getBetsInfo(e)}>
-                    {this.state.availableRaces.map((value, index) => {
-                        let formattedTime = value.time.substring(0, value.time.length - 5);
-                        return (
-                            <option value={index}>{value.location + " " + formattedTime}</option>
-                        )
-                    })}
-                </select>
-                <div className="main_table">
-                    {this.state.startingPrices.length !== 0 ? (
-                        <Table routerPath={"/available_horse_bet"}
-                               header={t('TABLE_BET_AVAILABLE_HORSE_COLUMNS', {returnObjects: true})}
-                               data={this.state.startingPrices} horses={this.state.availableHorses}
-                               chooseItem={this.chooseFirstHorse}/>) : null}
-                </div>
-                {this.state.type === "OPPOSITE" || this.state.type === "EXACTA" ?
+                <div className={"bet_block"}>
                     <div className="sub_table_bet">
-                        {this.state.startingPrices.length !== 0 ? (
+                        {this.state.bets.length !== 0 &&
+                        <Table routerPath={"/bet"} header={t('TABLE_BET_COLUMNS', {returnObjects: true})}
+                               data={this.state.bets}
+                               firstHorsesBet={this.state.firstHorsesBet}
+                               secondHorsesBet={this.state.secondHorsesBet}
+                               firstHorseStaringPrices={this.state.startingPricesBetFirstHorse}
+                               secondHorseStaringPrices={this.state.startingPricesBetSecondHorse}
+                               races={this.state.racesBet}
+                               editItem={this.editBet}
+                               deleteItem={this.deleteBet}/>}
+                    </div>
+                    <div className="sub_table_bet">
+                        {
+                            this.state.startingPrices.length !== 0 &&
                             <Table routerPath={"/available_horse_bet"}
                                    header={t('TABLE_BET_AVAILABLE_HORSE_COLUMNS', {returnObjects: true})}
                                    data={this.state.startingPrices} horses={this.state.availableHorses}
-                                   chooseItem={this.chooseSecondHorse}/>) : null}
-                    </div> : null
-                }
+                                   chooseItem={this.chooseFirstHorse}/>
+                        }
+                    </div>
+                    {
+                        (this.state.type === "OPPOSITE" || this.state.type === "EXACTA") &&
+                        <div className="sub_table_bet">
+                            {
+                                this.state.startingPrices.length !== 0 &&
+                                <Table routerPath={"/available_horse_bet"}
+                                       header={t('TABLE_BET_AVAILABLE_HORSE_COLUMNS', {returnObjects: true})}
+                                       data={this.state.startingPrices} horses={this.state.availableHorses}
+                                       chooseItem={this.chooseSecondHorse}/>
+                            }
+                        </div>
+                    }
+                </div>
                 <div className={"bet_editor"}>
+                    <select className="form-control race_select_bet" onChange={(e) => this.getBetsInfo(e)}
+                            value={this.state.currentRaceId}>
+                        <option defaultChecked={""}>
+                            {t('RACE')}...
+                        </option>
+                        {
+                            this.state.availableRaces.map((value) => {
+                                let formattedTime = value.time.substring(0, value.time.length - 5);
+
+                                return (
+                                    <option value={value.id}>{value.name + " " + formattedTime}</option>
+                                )
+                            })
+                        }
+                    </select>
+                    {
+                        this.props.validator.message(t('RACE'), this.state.currentRaceId, 'required')
+                    }
                     <EditTable data={[{
-                        name: "location",
-                        value: this.state.currentRace.location,
+                        name: "name",
+                        value: this.state.currentRace.name,
                         placeholder: t('RACE_LOCATION'),
-                        disabled: true
+                        disabled: true,
+                        validator: this.props.validator.message(t('RACE_LOCATION'), this.state.currentRace.name, 'required')
                     }, {
                         name: "time",
                         value: this.state.currentRace.time,
                         placeholder: t('TIME'),
-                        disabled: true
-                    },
-                        {
-                            name: "firstHorseName",
-                            value: this.state.firstHorseName,
-                            placeholder: t('FIRST_HORSE_NAME'),
-                            disabled: true
-                        },
-                        {
-                            name: "firstHorseJockey",
-                            value: this.state.firstHorseJockey,
-                            placeholder: t('FIRST_HORSE_JOCKEY'),
-                            disabled: true
-                        },
-                        {
-                            name: "firstHorseSP",
-                            value: this.state.firstHorseSP,
-                            placeholder: t('FIRST_HORSE_SP'),
-                            disabled: true
-                        },
-                        {
-                            name: "secondHorseName",
-                            value: this.state.secondHorseName,
-                            placeholder: t('SECOND_HORSE_NAME'),
-                            disabled: true
-                        },
-                        {
-                            name: "secondHorseJockey",
-                            value: this.state.secondHorseJockey,
-                            placeholder: t('SECOND_HORSE_JOCKEY'),
-                            disabled: true
-                        },
-                        {
-                            name: "secondHorseSP",
-                            value: this.state.secondHorseSP,
-                            placeholder: t('SECOND_HORSE_SP'),
-                            disabled: true
-                        },
-                        {name: "coefficient", value: this.state.coefficient, placeholder: t('COEFFICIENT')}]}
-                               select={{name: "type", placeholder: "Bet type", options: this.state.betTypes}}
+                        disabled: true,
+                        validator: this.props.validator.message(t('TIME'), this.state.currentRace.time, 'required')
+                    }, {
+                        name: "firstHorseName",
+                        value: this.state.firstHorseName,
+                        placeholder: t('FIRST_HORSE_NAME'),
+                        disabled: true,
+                        validator: this.props.validator.message(t('FIRST_HORSE_NAME'), this.state.firstHorseName, 'required')
+                    }, {
+                        name: "firstHorseJockey",
+                        value: this.state.firstHorseJockey,
+                        placeholder: t('FIRST_HORSE_JOCKEY'),
+                        disabled: true,
+                        validator: this.props.validator.message(t('FIRST_HORSE_JOCKEY'), this.state.firstHorseJockey, 'required')
+                    }, {
+                        name: "firstHorseSP",
+                        value: this.state.firstHorseSP,
+                        placeholder: t('FIRST_HORSE_SP'),
+                        disabled: true,
+                        validator: this.props.validator.message(t('FIRST_HORSE_JOCKEY'), this.state.firstHorseJockey, 'required')
+                    }, {
+                        name: "secondHorseName",
+                        value: this.state.secondHorseName,
+                        placeholder: t('SECOND_HORSE_NAME'),
+                        disabled: true,
+                        validator: this.props.validator.message(t('SECOND_HORSE_NAME'), this.state.secondHorseName, 'required')
+                    }, {
+                        name: "secondHorseJockey",
+                        value: this.state.secondHorseJockey,
+                        placeholder: t('SECOND_HORSE_JOCKEY'),
+                        disabled: true,
+                        validator: this.props.validator.message(t('SECOND_HORSE_JOCKEY'), this.state.secondHorseJockey, 'required')
+                    }, {
+                        name: "secondHorseSP",
+                        value: this.state.secondHorseSP,
+                        placeholder: t('SECOND_HORSE_SP'),
+                        disabled: true,
+                        validator: this.props.validator.message(t('SECOND_HORSE_SP'), this.state.secondHorseSP, 'required')
+                    }, {
+                        name: "coefficient",
+                        value: this.state.coefficient,
+                        placeholder: t('COEFFICIENT'),
+                        validator: this.props.validator.message(t('COEFFICIENT'), this.state.coefficient, 'required|min:1.1,num')
+                    }]} select={{
+                        name: "type",
+                        placeholder: "Bet type",
+                        value: this.state.type,
+                        options: this.state.betTypes,
+                        validator: this.props.validator.message(t('BET_TYPE'), this.state.type, 'required')
+                    }}
                                handleChange={this.handleChange} create={this.createBet}
                                update={this.updateBet}/>
                 </div>
+                {
+                    this.props.validator.messageWhenPresent(this.state.ajaxError, {
+                        element: message => <div className="ajax_error">{message}</div>
+                    })
+                }
             </React.Fragment>
         )
     }

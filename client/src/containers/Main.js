@@ -18,18 +18,20 @@ import BetResult from "./BetResult";
 import {Redirect} from 'react-router-dom';
 import {ClipLoader} from 'react-spinners';
 import {withTranslation} from "react-i18next";
+import EditTableUserUpdateBalance from "./EditTableUserUpdateBalance";
 
 class Main extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
             user: "",
             isLoading: true
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         document.body.className = "body_class_header";
         this.getCurrentUserState();
     }
@@ -47,66 +49,93 @@ class Main extends Component {
 
     render() {
         const {t} = this.props;
+
         return (
             <div>
                 <Route path={this.props.match.url + "/bookmaker"}
                        render={() => this.state.user.role && this.state.user.role.toLowerCase() === "bookmaker" ?
-                           (<div>
-                               <NavigationHeader menuItems={t('BOOKMAKER_MENU_ITEMS', {returnObjects: true})}/>
-                               <MainContent defaultFlag={this.props.defaultFlag}
-                                            changeDefaultFlag={this.props.changeDefaultFlag}/>
-                               <div id="mainDiv"/>
-                               <div className={"table_edit_area"}>
-                                   <Route exact path={this.props.match.url + "/bookmaker/horse"}
-                                          render={() => <EditTableHorse/>}/>
-                                   <Route exact path={this.props.match.url + "/bookmaker/race"}
-                                          render={() => <EditTableRace/>}/>
-                                   <Route exact path={this.props.match.url + "/bookmaker/sphorse"}
-                                          render={() => <EditTableHorseSP/>}/>
-                                   <Route exact path={this.props.match.url + "/bookmaker/bet"}
-                                          render={() => <EditTableBet/>}/>
+                           (
+                               <div>
+                                   <NavigationHeader menuItems={t('BOOKMAKER_MENU_ITEMS', {returnObjects: true})}/>
+                                   <MainContent defaultFlag={this.props.defaultFlag}
+                                                changeDefaultFlag={this.props.changeDefaultFlag}/>
+                                   <div id="mainDiv"/>
+                                   <div className={"table_edit_area"}>
+                                       <Route exact path={this.props.match.url + "/bookmaker/horse"}
+                                              render={() => <EditTableHorse validator={this.props.validator}/>}/>
+                                       <Route exact path={this.props.match.url + "/bookmaker/race"}
+                                              render={() => <EditTableRace validator={this.props.validator}/>}/>
+                                       <Route exact path={this.props.match.url + "/bookmaker/sphorse"}
+                                              render={() => <EditTableHorseSP validator={this.props.validator}/>}/>
+                                       <Route exact path={this.props.match.url + "/bookmaker/bet"}
+                                              render={() => <EditTableBet validator={this.props.validator}/>}/>
+                                   </div>
                                </div>
-                           </div>) : this.state.isLoading ? (
-                               <div className={"slider_style"}><ClipLoader sizeUnit={"px"} size={150} color={'#123abc'}
-                                                                           loading={this.state.isLoading}/></div>) : (
-                               <Redirect to={"/"}/>)}/>
+                           ) : this.state.isLoading ? (
+                               <div className={"slider_style"}>
+                                   <ClipLoader sizeUnit={"px"} size={150} color={'#123abc'}
+                                               loading={this.state.isLoading}/>
+                               </div>
+                           ) : (
+                               <Redirect to={"/"}/>)
+                       }/>
                 <Route/>
                 <Route path={this.props.match.url + "/admin"}
                        render={() => this.state.user.role && this.state.user.role.toLowerCase() === "admin" ?
-                           (<div>
-                               <NavigationHeader menuItems={t('ADMIN_MENU_ITEMS', {returnObjects: true})}/>
-                               <MainContent defaultFlag={this.props.defaultFlag}
-                                            changeDefaultFlag={this.props.changeDefaultFlag}/>
-                               <div id="mainDiv"/>
-                               <div className={"table_edit_area"}>
-                                   <Route exact path={this.props.match.url + "/admin/result"}
-                                          render={() => <EditTableResult/>}/>
+                           (
+                               <div>
+                                   <NavigationHeader menuItems={t('ADMIN_MENU_ITEMS', {returnObjects: true})}/>
+                                   <MainContent defaultFlag={this.props.defaultFlag}
+                                                changeDefaultFlag={this.props.changeDefaultFlag}/>
+                                   <div id="mainDiv"/>
+                                   <div className={"table_edit_area"}>
+                                       <Route exact path={this.props.match.url + "/admin/result"}
+                                              render={() => <EditTableResult validator={this.props.validator}/>}/>
+                                   </div>
+                                   <div className={"table_edit_user_balance_area"}>
+                                       <Route exact path={this.props.match.url + "/admin/userbalance"}
+                                              render={() => <EditTableUserUpdateBalance
+                                                  validator={this.props.validator}/>}/>
+                                   </div>
                                </div>
-                           </div>) : this.state.isLoading ? (
-                               <div className={"slider_style"}><ClipLoader sizeUnit={"px"} size={150} color={'#123abc'}
-                                                                           loading={this.state.isLoading}/></div>) : (
-                               <Redirect to={"/"}/>)}/>
+                           ) : this.state.isLoading ? (
+                               <div className={"slider_style"}>
+                                   <ClipLoader sizeUnit={"px"} size={150} color={'#123abc'}
+                                               loading={this.state.isLoading}/>
+                               </div>
+                           ) : (
+                               <Redirect to={"/"}/>)
+                       }/>
                 <Route/>
                 <Route path={this.props.match.url + "/user"}
                        render={() => this.state.user.role && this.state.user.role.toLowerCase() === "user" ?
-                           (<div>
-                               <NavigationHeaderUser user={this.state.user}
-                                                     menuItems={t('USER_MENU_ITEMS', {returnObjects: true})}/>
-                               <MainContent defaultFlag={this.props.defaultFlag}
-                                            changeDefaultFlag={this.props.changeDefaultFlag}/>
-                               <div id="mainDiv"/>
-                               <Route exact path={this.props.match.url + "/user/bet"}
-                                      render={() => <UserBet getCurrentUserState={this.getCurrentUserState}/>}/>
-                               <Route exact path={this.props.match.url + "/user/history"}
-                                      render={() => <HistoryBets/>}/>
-                               <Route exact path={this.props.match.url + "/user/profile"}
-                                      render={() => <EditUserProfile user={this.state.user}/>}/>
-                               <Route exact path={this.props.match.url + "/user/result"}
-                                      render={() => <BetResult/>}/>
-                           </div>) : this.state.isLoading ? (
-                               <div className={"slider_style"}><ClipLoader sizeUnit={"px"} size={150} color={'#123abc'}
-                                                                           loading={this.state.isLoading}/></div>) : (
-                               <Redirect to={"/"}/>)}/>
+                           (
+                               <div>
+                                   <NavigationHeaderUser user={this.state.user}
+                                                         menuItems={t('USER_MENU_ITEMS', {returnObjects: true})}/>
+                                   <MainContent defaultFlag={this.props.defaultFlag}
+                                                changeDefaultFlag={this.props.changeDefaultFlag}/>
+                                   <div id="mainDiv"/>
+                                   <div className={"table_edit_area"}>
+                                       <Route exact path={this.props.match.url + "/user/bet"}
+                                              render={() => <UserBet validator={this.props.validator}
+                                                                     getCurrentUserState={this.getCurrentUserState}/>}/>
+                                       <Route exact path={this.props.match.url + "/user/history"}
+                                              render={() => <HistoryBets/>}/>
+                                       <Route exact path={this.props.match.url + "/user/profile"}
+                                              render={() => <EditUserProfile user={this.state.user}
+                                                                             validator={this.props.validator}/>}/>
+                                       <Route exact path={this.props.match.url + "/user/result"}
+                                              render={() => <BetResult/>}/>
+                                   </div>
+                               </div>
+                           ) : this.state.isLoading ? (
+                                   <div className={"slider_style"}>
+                                       <ClipLoader sizeUnit={"px"} size={150} color={'#123abc'}
+                                                   loading={this.state.isLoading}/>
+                                   </div>)
+                               : (<Redirect to={"/"}/>)
+                       }/>
                 <Route/>
             </div>
         )

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ChooseButton from "./template/ChooseButton";
+import {withTranslation} from "react-i18next";
 
 class RowTableHorseBet extends Component {
 
@@ -8,6 +9,8 @@ class RowTableHorseBet extends Component {
     }
 
     render() {
+        let {t} = this.props;
+
         return (
             <tr>
                 <td>{this.props.horse.name}</td>
@@ -15,7 +18,7 @@ class RowTableHorseBet extends Component {
                 <td>{this.props.horse.trainer}</td>
                 <td>{this.props.horse.weight}</td>
                 <td>{this.props.value.sp}</td>
-                <ChooseButton chooseItem={this.props.chooseItem} value={{
+                <ChooseButton content={t('CHOOSE_HORSE')} chooseItem={this.props.chooseItem} value={{
                     id: this.props.value.id,
                     name: this.props.horse.name,
                     jockey: this.props.horse.jockey,
@@ -26,5 +29,4 @@ class RowTableHorseBet extends Component {
     }
 }
 
-
-export default RowTableHorseBet;
+export default withTranslation('translation')(RowTableHorseBet);

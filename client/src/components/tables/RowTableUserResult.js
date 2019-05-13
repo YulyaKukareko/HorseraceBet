@@ -18,5 +18,4 @@ class RowTableUserResult extends Component {
     }
 }
 
-
 export default RowTableUserResult;

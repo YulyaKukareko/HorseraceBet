@@ -9,10 +9,12 @@ class RowTableHorseBet extends Component {
 
     render() {
         let formattedTime = this.props.race.time.substring(0, this.props.race.time.length - 5);
+        let formattedBetType = this.props.value.type.charAt(0) + this.props.value.type.slice(1).toLowerCase();
+
         return (
             <tr>
-                <td>{this.props.value.type}</td>
-                <td>{this.props.race.location}</td>
+                <td>{formattedBetType}</td>
+                <td>{this.props.race.name}</td>
                 <td>{formattedTime}</td>
                 <td>{this.props.firstHorse.name}</td>
                 <td>{this.props.firstHorse.jockey}</td>
@@ -21,10 +23,10 @@ class RowTableHorseBet extends Component {
                 <td>{this.props.secondHorse.jockey}</td>
                 <td>{this.props.secondHorseStaringPrices.sp}</td>
                 <td>{this.props.value.coefficient}</td>
-                <EditButtons value={{
+                <EditButtons disableDeleted={true} value={{
                     id: this.props.value.id,
                     type: this.props.value.type,
-                    currentRace: {location: this.props.race.location, time: this.props.race.time},
+                    currentRace: {name: this.props.race.name, time: this.props.race.time, id: this.props.race.id},
                     firstHorseName: this.props.firstHorse.name,
                     firstHorseJockey: this.props.firstHorse.jockey,
                     firstHorseSP: this.props.firstHorseStaringPrices.sp,
@@ -39,6 +41,5 @@ class RowTableHorseBet extends Component {
         )
     }
 }
-
 
 export default RowTableHorseBet;

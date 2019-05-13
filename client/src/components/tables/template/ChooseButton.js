@@ -10,7 +10,7 @@ class ChooseButton extends Component {
         return (
             <React.Fragment>
                 <button disabled={!!this.props.disabled} className="btn btn-primary"
-                        onClick={() => this.props.chooseItem(this.props.value)}>Choose
+                        onClick={() => this.props.chooseItem(this.props.value)}>{this.props.content}
                 </button>
             </React.Fragment>
         )

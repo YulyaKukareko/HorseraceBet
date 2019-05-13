@@ -10,8 +10,9 @@ class SignUpButton extends Component {
 
     render() {
         const {t} = this.props;
+
         return (
-            <Link to={"/"} className={"header_btn_sign_up header_signup"}>{t('SIGNUP')}</Link>
+            <Link to={"/"} className={"header_btn_sign_up header_signup"}>{t('SIGN_UP')}</Link>
         )
     }
 }

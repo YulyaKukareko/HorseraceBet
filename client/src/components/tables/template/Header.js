@@ -10,10 +10,11 @@ class Header extends Component {
     render() {
         return (
             <tr>
-                {this.props.header.map((value) => {
-                    return (
-                        <th scope="col">{value}</th>
-                    );
+                {
+                    this.props.header.map((value) => {
+                        return (
+                            <th scope="col">{value}</th>
+                        );
                 })}
             </tr>
         )

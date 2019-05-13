@@ -11,11 +11,16 @@ class NavigationMenu extends Component {
         return (
             <div className="collapse navbar-collapse">
                 <ul className="navbar-nav">
-                    {this.props.menuItems.map((value) =>
-                        <li className="nav-item">
-                            <Link to={value.path} className="nav-link">{value.menuHeader}</Link>
-                        </li>
-                    )}
+                    {
+                        this.props.menuItems.map((value) => {
+                                return (
+                                    <li className="nav-item">
+                                        <Link to={value.path} className="nav-link">{value.menuHeader}</Link>
+                                    </li>
+                                )
+                            }
+                        )
+                    }
                 </ul>
             </div>
         )

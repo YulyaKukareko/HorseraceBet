@@ -13,8 +13,16 @@ class HeaderRaceInfo extends Component {
                 <div className={"sDvRaceInformationHeader"}>
                     <table>
                         <tbody>
-                        <tr><span className={"sLblTrackNameTitle"}>{this.props.race.location}</span></tr>
-                        <tr><span className={"sLblMTP"}>{this.props.date}: {formattedTime}</span></tr>
+                        <tr>
+                            <span className={"sLblTrackNameTitle"}>
+                                {this.props.country.name}
+                            </span>
+                        </tr>
+                        <tr>
+                            <span className={"sLblMTP"}>
+                                {this.props.date}: {formattedTime}
+                            </span>
+                        </tr>
                         </tbody>
                     </table>
                 </div>

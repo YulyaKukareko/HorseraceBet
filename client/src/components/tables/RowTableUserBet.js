@@ -1,17 +1,30 @@
 import React, {Component} from 'react';
 import ChooseButton from "./template/ChooseButton";
+import {withTranslation} from "react-i18next";
 
 class RowTableUserBet extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            betMoney: ""
+        }
     }
 
+    handleChange = (event) => {
+        this.setState({[event.target.name]: event.target.value});
+    };
+
     render() {
+        let {t} = this.props;
+
         return (
             <tr>
-                <td><input type={"text"} placeholder={"Bet sum"} className="form-control" name={"betMoney"}
-                           value={this.props.betMoney} onChange={this.props.handleChange}/></td>
+                <td>
+                    <input type={"text"} placeholder={t('SUM')} className="form-control" name={"betMoney"}
+                           value={this.state.betMoney} onChange={this.handleChange}/>
+                </td>
                 <td>{this.props.firstHorse.name}</td>
                 <td>{this.props.firstHorse.jockey}</td>
                 <td>{this.props.firstHorse.trainer}</td>
@@ -29,12 +42,12 @@ class RowTableUserBet extends Component {
                 <ChooseButton chooseItem={this.props.chooseItem} value={{
                     betId: this.props.value.id,
                     coefficient: this.props.value.coefficient,
-                    sp: this.props.value.sp
-                }}/>
+                    sp: this.props.startingPrice.sp,
+                    betMoney: this.state.betMoney,
+                }} content={t('MAKE_BET')}/>
             </tr>
         )
     }
 }
 
-
-export default RowTableUserBet;
+export default withTranslation('translation')(RowTableUserBet);

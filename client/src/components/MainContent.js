@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
 import LanguageSelect from "./template/LanguageSelect";
+import {withTranslation} from "react-i18next";
 
 class MainContent extends Component {
+
     render() {
+        let {t} = this.props;
+
         return (
             <main className="main-content">
                 <section className="hero hero_image">
@@ -10,8 +14,8 @@ class MainContent extends Component {
                         <div className="hero_content">
                             <div className="block-center">
                                 <div className="block-center_content">
-                                    <h1 className="hero_title">Horse Racing Odds</h1>
-                                    <span className="hero_title small">Get a 10% Signup Bonus and Rebates from <i>bet ★ usracing</i></span>
+                                    <h1 className="hero_title">{t('MAIN_CONTENT_TITLE')}</h1>
+                                    <span className="hero_title small">{t('MAIN_CONTENT')} <i>bet ★ usracing</i></span>
                                 </div>
                             </div>
                         </div>
@@ -26,4 +30,4 @@ class MainContent extends Component {
     }
 }
 
-export default MainContent;
+export default withTranslation('translation')(MainContent);

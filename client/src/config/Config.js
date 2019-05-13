@@ -1,8 +1,12 @@
-const BASENAME = "/server_war/ctrl/";
+const BASENAME = "/server_war/api/";
 
 const Config = {
-    SIGNIN: BASENAME + "auth/signin",
-    SIGNUP: BASENAME + "signup",
+
+    SIGN_IN: BASENAME + "auth/signin",
+    SIGN_UP: BASENAME + "signup/ ",
+
+    GET_COUNTRIES: BASENAME + "country/getAll",
+    GET_COUNTRY_BY_ID: BASENAME + "country/getById",
 
     GET_HORSES: BASENAME + "horses/getAll",
     GET_HORSE_BY_ID: BASENAME + "horses/getById",
@@ -41,7 +45,6 @@ const Config = {
 
     UPDATE_BET: BASENAME + "bets/update",
     GET_BETS_TYPE: BASENAME + "bets/getAllTypes",
-    DELETE_BET: BASENAME + "bets/delete",
     GET_BETS: BASENAME + "bets/getAll",
     GET_BET_BY_ID: BASENAME + "bets/getById",
     GET_BETS_BY_RACE_ID_AND_BET_TYPES: BASENAME + "bets/getAllByRaceIdAndBetType",
@@ -55,37 +58,24 @@ const Config = {
 
     GET_USER_BY_ID: BASENAME + "user/getUserById",
     UPDATE_USER: BASENAME + "user/update",
+    USER_GET_ALL: BASENAME + "user/getAll",
+    USER_ADDING_BALANCE_MONEY: BASENAME + "user/updateBalance",
 
-    MONTHS: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    BOOKMAKER_MENU_ITEMS: [{path: "/auth/bookmaker/horse", menuHeader: "Add horse"}, {
-        path: "/auth/bookmaker/race",
-        menuHeader: "Add race"
-    },
-        {path: "/auth/bookmaker/sphorse", menuHeader: "Add starting price"}, {
-            path: "/auth/bookmaker/bet",
-            menuHeader: "Add bet"
-        }],
-    ADMIN_MENU_ITEMS: [{path: "/auth/admin/result", menuHeader: "Add result"}],
-    USER_MENU_ITEMS: [{path: "/auth/user/bet", menuHeader: "Bets"}, {
-        path: "/auth/user/history",
-        menuHeader: "History bets"
-    },
-        {path: "/auth/user/result", menuHeader: "Results"}],
-    TABLE_EDIT_HORSE_COLUMNS: ["Name", "Jockey", "Trainer", "Weight"],
-    TABLE_RACE_COLUMNS: ["Location", "Race type", "Distance", "Purse", "Time"],
-    TABLE_TYPE_RACE_COLUMNS: ["Choose", "Type"],
-    TABLE_SP_COLUMNS_HORSE: ["Id", "Horse name", "Jockey name"],
-    TABLE_SP_COLUMNS_RACES: ["Id", "Location", "Distance"],
-    TABLE_SP_COLUMNS: ["Race Id", "Horse id", "Horse name", "Race id", "Location", "Starting price"],
-    TABLE_BET_AVAILABLE_HORSE_COLUMNS: ["Horse name", "Jockey", "Trainer", "Weight", "Starting price"],
-    TABLE_BET_COLUMNS: ["Bet type", "Race location", "Race time", "First horse name", "Jockey", "SP", "Second horse name", "Jockey", "SP", "Coefficient"],
-    TABLE_USER_BET_COLUMNS: ["Bet type", "Race location", "Date", "First horse name", "Jockey", "Second horse name", "Jockey", "SP", "Bet sum", "Coefficient", "Status"],
-    TABLE_BET_SINGLE: ["Bet money", "Horse name", "Jockey", "Trainer", "Weight", "Coefficient"],
-    TABLE_BET_DOUBLE: ["Bet money", "Horse name", "Jockey", "Trainer", "Weight", "Horse name", "Jockey", "Trainer", "Weight", "Coefficient"],
-    TABLE_RESULT_COLUMNS: ["Place", "Horse name", "Horse jockey"],
-    TABLE_RESULT_USER_COLUMNS: ["Place", "Horse name", "Jockey", "Trainer"],
+    BET_TYPES: ["Win", "Place", "Show", "Opposite", "Exacta"],
+    TRANSACTION_ERROR: "Transaction not completed. Try again",
+    INPUT_PARAMETERS_INCORRECT_ERROR: "The value of the entered parameters is incorrect",
+    DATABASE_NOT_RESPONDING_ERROR: "Database not responding. Try again later",
+    INCORRECT_EMAIL_ERROR: "Incorrect e-mail",
+    INCORRECT_PASSWORD_ERROR: "Incorrect password",
+    INCORRECT_COEFFICIENT_ERROR: "Incorrect coefficient",
+    INCORRECT_SUM_ERROR: "Incorrect sum",
+    INCORRECT_PLACE_NUMBER_ERROR: "Incorrect place number",
+    INCORRECT_TIME_ERROR: "Incorrect time",
+    DUPLICATION_EMAIL_ERROR: "This email is already taken",
+    INSUFFICIENT_FOUNDS_ERROR: "Insufficient funds!",
 
-    COUNT_RECORD_TABLE: 3
+    COUNT_RECORD_TABLE: 3,
+    INITIAL_PAGINATION_STEP: 1
 };
 
 export default Config;

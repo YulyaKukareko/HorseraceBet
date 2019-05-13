@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {withTranslation} from "react-i18next";
 
 class EditButtons extends Component {
 
@@ -7,25 +8,26 @@ class EditButtons extends Component {
     }
 
     render() {
+        const {t} = this.props;
         return (
             <React.Fragment>
                 <td>
                     <div>
                         <button className="btn btn-primary"
-                                onClick={() => this.props.editItem(this.props.value)}>Edit
+                                onClick={() => this.props.editItem(this.props.value)}>{t('EDIT')}
                         </button>
                     </div>
                 </td>
-                <td>
+                {this.props.disableDeleted !== true ? (<td>
                     <div>
                         <button className="btn btn-danger"
-                                onClick={() => this.props.deleteItem(this.props.value)}>Delete
+                                onClick={() => this.props.deleteItem(this.props.value)}>{t('DELETE')}
                         </button>
                     </div>
-                </td>
+                </td>) : null}
             </React.Fragment>
         )
     }
 }
 
-export default EditButtons;
+export default withTranslation('translation')(EditButtons);

@@ -1,7 +1,20 @@
 .main_table {
     width: 60%;
+    height: 50%;
     display: inline-block;
     float: left;
+}
+
+.horse_starting_price {
+    width: 70%;
+    float: left;
+    height: 20%;
+}
+
+.result_edit {
+    width: 20%;
+    float: left;
+    margin-left: 10%;
 }
 
 .race_select {
@@ -11,18 +24,20 @@
 }
 
 .user_bets {
-    float: left;
-    margin-left: 18vw;
-    width: 80%;
+    width: 110%;
+}
+
+.bets_results {
+    width: 100%;
 }
 
 .result {
-    width: 35%;
+    width: 48%;
     float: left;
 }
 
 .horse_starting_sub_component {
-    width: 30%;
+    width: 45%;
     margin-left: 5%;
     float: left;
 }
@@ -34,15 +49,13 @@
 }
 
 .result_sub_component {
-    width: 35%;
+    width: 48%;
     margin-left: 2%;
     float: left;
 }
 
 .sub_table_bet {
-    width: 75%;
-    display: inline-block;
-    float: left;
+    width: 100%;
 }
 
 .bet_history {
@@ -51,16 +64,20 @@
 }
 
 .bet_editor {
-    width: 18%;
+    width: 20%;
     float: left;
-    margin-left: 71.6vw;
+    margin-left: 10%;
+}
+
+.bet_block {
+    width: 70%;
+    height: 50%;
+    float: left;
 }
 
 
 .race_select_bet {
-    width: 18%;
-    float: left;
-    margin-left: 2vw;
+    width: 100%;
     margin-bottom: 0.4vw;
 }
 
@@ -72,8 +89,8 @@
 }
 
 .horse_starting_price_editors {
-    width: 25%;
-    margin-left: 5%;
+    width: 23%;
+    margin-left: 7%;
     float: left;
 }
 
@@ -84,9 +101,9 @@
 }
 
 .edit {
-    width: 35%;
+    width: 25%;
     float: left;
-    margin-left: 5%;
+    margin-left: 12%;
 }
 
 .horse_create_btn {
@@ -97,12 +114,6 @@
 .horse_edit_btn {
     width: 40%;
     margin-left: 40px;
-}
-
-.race_select_bet_result {
-    width: 25%;
-    float: left;
-    margin-left: 3%;
 }
 
 .buttons {

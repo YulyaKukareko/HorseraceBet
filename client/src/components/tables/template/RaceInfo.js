@@ -17,26 +17,38 @@ class RaceInfo extends Component {
                             <tr>
                                 <td width="60px" align="left" valign="bottom">
                                     <span id="lblType" className="sLblRaceInformationTitle"
-                                          style={{display: "inline-block", width: 50 + 'px'}}>{this.props.type}</span>
+                                          style={{display: "inline-block", width: 50 + 'px'}}>
+                                        {this.props.type}
+                                    </span>
                                 </td>
                                 <td width="60px" align="left" valign="bottom">
                                     <span id="lblType" className="sLblRaceInformationTitle"
-                                          style={{display: "inline-block", width: 50 + 'px'}}>{this.props.location}</span>
+                                          style={{display: "inline-block", width: 50 + 'px'}}>
+                                        {this.props.name}
+                                    </span>
                                 </td>
                                 <td width="60px" align="left" valign="bottom">
                                     <span id="lblType" className="sLblRaceInformationTitle"
-                                          style={{display: "inline-block", width: 50 + 'px'}}>{this.props.purse}</span>
+                                          style={{display: "inline-block", width: 50 + 'px'}}>
+                                        {this.props.purse}
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
                                 <td width="110px" className="sTdRaceInformation">
-                                    <span id="RaceType">{this.props.race.type}</span>
+                                    <span id="RaceType">
+                                        {this.props.race.type}
+                                    </span>
                                 </td>
                                 <td width="110px" className="sTdRaceInformation">
-                                    <span id="RaceType">{this.props.race.location}</span>
+                                    <span id="RaceType">
+                                        {this.props.race.name}
+                                    </span>
                                 </td>
                                 <td width="110px" className="sTdRaceInformation">
-                                    <span id="RaceType">{this.props.race.purse}$</span>
+                                    <span id="RaceType">
+                                        {this.props.race.purse}$
+                                    </span>
                                 </td>
                             </tr>
                             </tbody>

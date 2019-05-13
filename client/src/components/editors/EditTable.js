@@ -13,35 +13,40 @@ class EditTable extends Component {
             <div className={this.props.editStyle}>
                 <div className="row">
                     <div className="col">
-                        {this.props.select && this.props.select.options &&
-                        <select name={this.props.select.name} className="form-control"
-                                placeholder={this.props.select.placeholder} onChange={this.props.handleChange}>
-                            {this.props.select.options.map((value) => {
-                                return (
-                                    <option value={value}>{value.charAt(0) + value.slice(1).toLowerCase()}</option>
-                                )
-                            })};
-                        </select>
-
+                        {this.props.select && this.props.select.options ?
+                            (<React.Fragment>
+                                <select name={this.props.select.name} className="form-control"
+                                        value={this.props.select.value} onChange={this.props.handleChange}>
+                                    <option defaultChecked={""}>
+                                        {this.props.select.placeholder}...
+                                    </option>
+                                    {this.props.select.options.map((value) => {
+                                        return (
+                                            <option
+                                                value={value}>{value.charAt(0) + value.slice(1).toLowerCase()}
+                                            </option>
+                                        )
+                                    })};
+                                </select>
+                                {this.props.select.validator}
+                            </React.Fragment>) : null
                         }
                         {this.props.data.map((value) => {
                             return (
-                                value.disabled ?
+                                <React.Fragment>
                                     <div className="md-form mt-0">
-                                        <input disabled={true} name={value.name} value={value.value} type="text"
-                                               className="form-control"
-                                               placeholder={value.placeholder} onChange={this.props.handleChange}/>
-                                    </div> :
-                                    <div className="md-form mt-0">
-                                        <input name={value.name} value={value.value} type="text"
-                                               className="form-control"
-                                               placeholder={value.placeholder} onChange={this.props.handleChange}/>
+                                        <input disabled={value.disabled} name={value.name} value={value.value}
+                                               type="text" className="form-control" placeholder={value.placeholder}
+                                               onChange={this.props.handleChange}/>
                                     </div>
+                                    {value.validator}
+                                </React.Fragment>
                             )
                         })}
                     </div>
                 </div>
-                <EditButtons create={this.props.create} update={this.props.update}/>
+                <EditButtons disableCreate={this.props.disableCreate} disableSave={this.props.disableSave}
+                             create={this.props.create} update={this.props.update}/>
             </div>
         )
     }
