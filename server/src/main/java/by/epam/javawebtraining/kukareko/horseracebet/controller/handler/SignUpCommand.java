@@ -29,7 +29,7 @@ public class SignUpCommand implements Command, GetParams {
     }
 
     @Override
-    public JSONObject execute(HttpServletRequest request, HttpServletResponse response) throws HorseRaceBetException {
+    public JSONObject execute(HttpServletRequest request) throws HorseRaceBetException {
         User user = new Gson().fromJson(getParam(request), User.class);
         user.setBalance(new BigDecimal(2000));
         JSONObject result = new JSONObject();

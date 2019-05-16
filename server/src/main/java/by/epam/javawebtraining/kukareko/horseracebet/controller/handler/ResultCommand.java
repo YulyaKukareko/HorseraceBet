@@ -30,7 +30,7 @@ public class ResultCommand implements Command, GetAction, GetParams {
     }
 
     @Override
-    public JSONObject execute(HttpServletRequest request, HttpServletResponse response) throws HorseRaceBetException {
+    public JSONObject execute(HttpServletRequest request) throws HorseRaceBetException {
         JSONObject resultJSON = new JSONObject();
 
         switch (getAction(request)) {

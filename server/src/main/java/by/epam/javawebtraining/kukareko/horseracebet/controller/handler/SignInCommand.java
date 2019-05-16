@@ -27,7 +27,7 @@ public class SignInCommand implements Command, GetParams {
     }
 
     @Override
-    public JSONObject execute(HttpServletRequest request, HttpServletResponse response) throws HorseRaceBetException {
+    public JSONObject execute(HttpServletRequest request) throws HorseRaceBetException {
         String requestParamLogin = configurationManager.getProperty("requestParam.login");
         String requestParamPassword = configurationManager.getProperty("requestParam.password");
         String responseParamAuthorization = configurationManager.getProperty("responseParam.authorization");

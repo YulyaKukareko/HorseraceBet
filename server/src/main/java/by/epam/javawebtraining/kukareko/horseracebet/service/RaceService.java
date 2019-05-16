@@ -98,6 +98,6 @@ public class RaceService {
         validateWeightOrDistance((float) race.getDistance());
         validateMoney(race.getPurse());
         validateEnum(race.getType());
-//        validateRaceTime(race.getTime());
+        validateRaceTime(race.getTime());
     }
 }

@@ -52,7 +52,7 @@ public class Controller extends HttpServlet {
             Command command = requestHelper.getCommand(request);
 
             if (command != null) {
-                result = command.execute(request, response);
+                result = command.execute(request);
             } else {
                 request.getRequestDispatcher("/WEB-INF/views/error404.jsp").forward(request, response);
             }

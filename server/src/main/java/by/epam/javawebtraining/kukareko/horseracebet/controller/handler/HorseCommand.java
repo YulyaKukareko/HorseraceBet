@@ -30,7 +30,7 @@ public class HorseCommand implements Command, GetParams, GetAction {
     }
 
     @Override
-    public JSONObject execute(HttpServletRequest request, HttpServletResponse response) throws HorseRaceBetException {
+    public JSONObject execute(HttpServletRequest request) throws HorseRaceBetException {
         String responseParamResult = configurationManager.getProperty("configJSON.result");
         String requestParamRaceId = configurationManager.getProperty("requestParam.raceId");
         String requestParamNoResult = configurationManager.getProperty("responseParam.noResult");

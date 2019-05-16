@@ -29,7 +29,7 @@ public class CountryCommand implements Command, GetAction, GetParams {
     }
 
     @Override
-    public JSONObject execute(HttpServletRequest request, HttpServletResponse response) throws HorseRaceBetException {
+    public JSONObject execute(HttpServletRequest request) throws HorseRaceBetException {
         String responseParamResult = configurationManager.getProperty("configJSON.result");
 
         JSONObject result = new JSONObject();

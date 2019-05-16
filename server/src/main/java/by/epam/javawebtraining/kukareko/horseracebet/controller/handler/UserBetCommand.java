@@ -32,7 +32,7 @@ public class UserBetCommand implements Command, GetAction, GetParams {
     }
 
     @Override
-    public JSONObject execute(HttpServletRequest request, HttpServletResponse response) throws HorseRaceBetException {
+    public JSONObject execute(HttpServletRequest request) throws HorseRaceBetException {
         String requestParamId = configurationManager.getProperty("params.id");
 
         JSONObject result = new JSONObject();
