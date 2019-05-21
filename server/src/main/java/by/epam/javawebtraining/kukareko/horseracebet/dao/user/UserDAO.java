@@ -14,8 +14,6 @@ public interface UserDAO extends DAO<User, Long> {
 
     User getByLoginAndPassword(String login, String password) throws HorseRaceBetException;
 
-    void makeBet(long id, BigDecimal betMoney) throws HorseRaceBetException;
-
     boolean checkExistsEmail(String email) throws HorseRaceBetException;
 
     void updateBalance(Long id, BigDecimal money) throws HorseRaceBetException;

@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.builder;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.EntityBuilderColumnConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Role;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.User;
 
@@ -41,13 +43,13 @@ public class UserBuilder extends AbstractBuilder<User> {
 
         try {
             user = new User();
-            user.setId(rs.getLong("id"));
-            user.setEmail(rs.getString("email"));
-            user.setFirstName(rs.getString("first_name"));
-            user.setLastName(rs.getString("last_name"));
-            user.setBalance(rs.getBigDecimal("balance"));
-            user.setCountryId(rs.getLong("country_id"));
-            user.setRole(Role.valueOf(rs.getString("role").toUpperCase()));
+            user.setId(rs.getLong(ID_COLUMN));
+            user.setEmail(rs.getString(EMAIL_COLUMN));
+            user.setFirstName(rs.getString(FIRST_NAME_COLUMN));
+            user.setLastName(rs.getString(LAST_NAME_COLUMN));
+            user.setBalance(rs.getBigDecimal(BALANCE_COLUMN));
+            user.setCountryId(rs.getLong(COUNTRY_ID_COLUMN));
+            user.setRole(Role.valueOf(rs.getString(ROLE_COLUMN).toUpperCase()));
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
         }

@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.country;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.SQLConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.AbstractDAO;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.AbstractBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.FactoryBuilder;
@@ -25,10 +27,21 @@ public class CountryDAOImpl extends AbstractDAO implements CountryDAO {
 
     private static CountryDAOImpl dao;
 
+    private String selectById;
+    private String select;
+    private String insert;
+    private String update;
+    private String delete;
+
     private AbstractBuilder builder;
 
     private CountryDAOImpl() {
-        builder = FactoryBuilder.getBuilder(TypeBuilder.COUNTRY);
+        this.builder = FactoryBuilder.getBuilder(TypeBuilder.COUNTRY);
+        this.selectById = configurationManager.getProperty(SQL_SELECT_COUNTRY_BY_ID);
+        this.select = configurationManager.getProperty(SQL_SELECT_COUNTRY);
+        this.insert = configurationManager.getProperty(SQL_INSERT_COUNTRY);
+        this.update = configurationManager.getProperty(SQL_UPDATE_COUNTRY);
+        this.delete = configurationManager.getProperty(SQL_DELETE_COUNTRY);
     }
 
     public static CountryDAOImpl getInstance() {
@@ -49,7 +62,7 @@ public class CountryDAOImpl extends AbstractDAO implements CountryDAO {
         queryParams.put(1, id);
         Country country = null;
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectCountryById"), queryParams, true);
+        ResultSet rs = executeQuery(selectById, queryParams, true);
         try {
             if (rs.next()) {
                 country = (Country) builder.getEntity(rs);
@@ -65,7 +78,7 @@ public class CountryDAOImpl extends AbstractDAO implements CountryDAO {
         ResultSet rs;
         List<Country> horses = new ArrayList<>();
 
-        rs = executeQuery(configurationManager.getProperty("SQL.selectCountry"), null, true);
+        rs = executeQuery(select, null, true);
         try {
             while (rs.next()) {
                 horses.add((Country) builder.getEntity(rs));
@@ -81,7 +94,7 @@ public class CountryDAOImpl extends AbstractDAO implements CountryDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, country.getName());
 
-        executeQuery(configurationManager.getProperty("SQL.insertCountry"), queryParams, false);
+        executeQuery(insert, queryParams, false);
     }
 
     @Override
@@ -90,7 +103,7 @@ public class CountryDAOImpl extends AbstractDAO implements CountryDAO {
         queryParams.put(1, entity.getName());
         queryParams.put(2, entity.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.updateCountry"), queryParams, false);
+        executeQuery(update, queryParams, false);
     }
 
     @Override
@@ -98,6 +111,6 @@ public class CountryDAOImpl extends AbstractDAO implements CountryDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, country.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.deleteCountry"), queryParams, false);
+        executeQuery(delete, queryParams, false);
     }
 }

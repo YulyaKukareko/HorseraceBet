@@ -1,4 +1,6 @@
-package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
+package by.epam.javawebtraining.kukareko.horseracebet.handler;
+
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.JSONParamConstant.*;
 
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetParams;
 import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
@@ -8,7 +10,6 @@ import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -19,19 +20,30 @@ public class SignInCommand implements Command, GetParams {
 
     private ConfigurationManager configurationManager;
 
+    private String requestParamLogin;
+    private String requestParamPassword;
+    private String responseParamAuthorization;
+    private String statusRespSuccess;
+    private String sessionParamId;
+    private String responseParamRole;
+    private String statusRespFailed;
+
     private UserService service;
 
     public SignInCommand() {
-        service = UserService.getInstance();
-        configurationManager = ConfigurationManager.getInstance();
+        this.service = UserService.getInstance();
+        this.configurationManager = ConfigurationManager.getInstance();
+        this.requestParamLogin = configurationManager.getProperty(REQUEST_PARAM_LOGIN);
+        this.requestParamPassword = configurationManager.getProperty(REQUEST_PARAM_PASSWORD);
+        this.responseParamAuthorization = configurationManager.getProperty(RESPONSE_PARAM_AUTHORIZATION);
+        this.statusRespSuccess = configurationManager.getProperty(RESPONSE_PARAM_STATUS_SUCCESS);
+        this.sessionParamId = configurationManager.getProperty(PARAMS_ID);
+        this.responseParamRole = configurationManager.getProperty(RESPONSE_PARAM_ROLE);
+        this.statusRespFailed = configurationManager.getProperty(RESPONSE_PARAM_STATUS_FAILED);
     }
 
     @Override
     public JSONObject execute(HttpServletRequest request) throws HorseRaceBetException {
-        String requestParamLogin = configurationManager.getProperty("requestParam.login");
-        String requestParamPassword = configurationManager.getProperty("requestParam.password");
-        String responseParamAuthorization = configurationManager.getProperty("responseParam.authorization");
-
         JSONObject userDetails = new JSONObject(getParam(request));
         String login = userDetails.getString(requestParamLogin);
         String password = userDetails.getString(requestParamPassword);
@@ -50,18 +62,11 @@ public class SignInCommand implements Command, GetParams {
             int maxInactiveIntervalSession = -1;
             newSession.setMaxInactiveInterval(maxInactiveIntervalSession);
 
-            String statusRespSuccess = configurationManager.getProperty("responseParam.status.success");
-
             result.put(responseParamAuthorization, statusRespSuccess);
-
-            String sessionParamId = configurationManager.getProperty("params.id");
-            String responseParamRole = configurationManager.getProperty("responseParam.role");
 
             newSession.setAttribute(sessionParamId, user.getId());
             result.put(responseParamRole, user.getRole());
         } else {
-            String statusRespFailed = configurationManager.getProperty("responseParam.status.failed");
-
             result.put(responseParamAuthorization, statusRespFailed);
         }
 

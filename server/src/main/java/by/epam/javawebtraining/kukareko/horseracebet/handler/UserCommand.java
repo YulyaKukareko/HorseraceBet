@@ -1,4 +1,7 @@
-package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
+package by.epam.javawebtraining.kukareko.horseracebet.handler;
+
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.ActionConstant.*;
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.JSONParamConstant.*;
 
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetAction;
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetParams;
@@ -11,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,40 +26,44 @@ public class UserCommand implements Command, GetAction, GetParams {
 
     private ConfigurationManager configurationManager;
 
+    private String requestParamId;
+    private String responseParamResult;
+    private String responseParamNoResult;
+    private String requestParamAddingMoney;
+
     private UserService service;
 
     public UserCommand() {
-        service = UserService.getInstance();
-        configurationManager = ConfigurationManager.getInstance();
+        this.service = UserService.getInstance();
+        this.configurationManager = ConfigurationManager.getInstance();
+        this.requestParamId = configurationManager.getProperty(PARAMS_ID);
+        this.responseParamResult = configurationManager.getProperty(CONFIG_JSON_RESULT);
+        this.responseParamNoResult = configurationManager.getProperty(RESPONSE_PARAM_NO_RESULT);
+        this.requestParamAddingMoney = configurationManager.getProperty(REQUEST_PARAM_ADDING_MONEY);
     }
 
     @Override
     public JSONObject execute(HttpServletRequest request) throws HorseRaceBetException {
-        String requestParamId = configurationManager.getProperty("params.id");
-
         JSONObject result = new JSONObject();
         User user;
 
         switch (getAction(request)) {
-            case "getUserById":
+            case GET_BY_ID:
 
                 HttpSession session = request.getSession();
                 long userId = (long) session.getAttribute(requestParamId);
                 user = service.getUserById(userId);
 
-                result.put("result", new JSONObject(user));
+                result.put(responseParamResult, new JSONObject(user));
                 break;
-            case "update":
+            case UPDATE:
                 user = new Gson().fromJson(getParam(request), User.class);
                 session = request.getSession();
                 user.setId((long) session.getAttribute(requestParamId));
 
                 service.update(user);
                 break;
-            case "getAll":
-                String responseParamResult = configurationManager.getProperty("configJSON.result");
-                String responseParamNoResult = configurationManager.getProperty("responseParam.noResult");
-
+            case GET_ALL:
                 List<User> userBets = service.getAll();
 
                 if (userBets != null) {
@@ -66,9 +72,7 @@ public class UserCommand implements Command, GetAction, GetParams {
                     result.put(responseParamResult, responseParamNoResult);
                 }
                 break;
-            case "updateBalance":
-                String requestParamAddingMoney = configurationManager.getProperty("requestParam.addingMoney");
-
+            case UPDATE_BALANCE:
                 JSONObject json = new JSONObject(getParam(request));
                 long addingSum = Long.parseLong(json.get(requestParamAddingMoney).toString());
                 userId = Long.parseLong(json.get(requestParamId).toString());

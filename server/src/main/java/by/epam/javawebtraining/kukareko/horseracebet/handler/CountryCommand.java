@@ -1,4 +1,7 @@
-package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
+package by.epam.javawebtraining.kukareko.horseracebet.handler;
+
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.ActionConstant.*;
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.JSONParamConstant.*;
 
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetAction;
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetParams;
@@ -10,7 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -21,27 +23,28 @@ public class CountryCommand implements Command, GetAction, GetParams {
 
     private ConfigurationManager configurationManager;
 
+    private String responseParamResult;
+    private String requestParamId;
+
     private CountryService service;
 
     public CountryCommand() {
-        service = CountryService.getInstance();
-        configurationManager = ConfigurationManager.getInstance();
+        this.service = CountryService.getInstance();
+        this.configurationManager = ConfigurationManager.getInstance();
+        this.responseParamResult = configurationManager.getProperty(CONFIG_JSON_RESULT);
+        this.requestParamId = configurationManager.getProperty(PARAMS_ID);
     }
 
     @Override
     public JSONObject execute(HttpServletRequest request) throws HorseRaceBetException {
-        String responseParamResult = configurationManager.getProperty("configJSON.result");
-
         JSONObject result = new JSONObject();
         switch (getAction(request)) {
-            case "getAll":
+            case GET_ALL:
                 List<Country> countries = service.getAll();
 
                 result.put(responseParamResult, new JSONArray(countries));
                 break;
-            case "getById":
-                String requestParamId = configurationManager.getProperty("params.id");
-
+            case GET_BY_ID:
                 JSONObject json = new JSONObject(getParam(request));
                 long countryId = Long.parseLong(json.get(requestParamId).toString());
                 Country country = service.getById(countryId);

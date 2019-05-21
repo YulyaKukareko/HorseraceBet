@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.builder;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.EntityBuilderColumnConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Result;
 
 import java.sql.ResultSet;
@@ -40,10 +42,10 @@ public class ResultBuilder extends AbstractBuilder<Result> {
 
         try {
             resultRace = new Result();
-            resultRace.setId(rs.getLong("id"));
-            resultRace.setRaceId(rs.getLong("race_id"));
-            resultRace.setHorseId(rs.getLong("horse_id"));
-            resultRace.setPlace(rs.getInt("place"));
+            resultRace.setId(rs.getLong(ID_COLUMN));
+            resultRace.setRaceId(rs.getLong(RACE_ID_COLUMN));
+            resultRace.setHorseId(rs.getLong(HORSE_ID_COLUMN));
+            resultRace.setPlace(rs.getInt(PLACE_COLUMN));
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
         }

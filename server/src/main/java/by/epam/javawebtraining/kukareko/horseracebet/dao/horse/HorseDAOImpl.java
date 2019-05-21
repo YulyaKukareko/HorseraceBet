@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.horse;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.SQLConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.AbstractBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.FactoryBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.TypeBuilder;
@@ -25,10 +27,33 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
 
     private static HorseDAOImpl dao;
 
+    private String selectById;
+    private String select;
+    private String insert;
+    private String update;
+    private String delete;
+    private String selectJoinHorseStartingPrice;
+    private String selectJoinStartingPriceAndFirstHorseBet;
+    private String selectJoinStartingPriceAndFirstHorseBySPId;
+    private String selectJoinStartingPriceAndSecondHorseBet;
+    private String selectJoinHorseStartingPriceByRaceId;
+    private String selectJoinHorseStartingPriceExcludingByRaceId;
+
     private AbstractBuilder builder;
 
     private HorseDAOImpl() {
-        builder = FactoryBuilder.getBuilder(TypeBuilder.HORSE);
+        this.builder = FactoryBuilder.getBuilder(TypeBuilder.HORSE);
+        this.selectById = configurationManager.getProperty(SQL_SELECT_HORSE_BY_ID);
+        this.select = configurationManager.getProperty(SQL_SELECT_HORSE);
+        this.insert = configurationManager.getProperty(SQL_INSERT_HORSE);
+        this.update = configurationManager.getProperty(SQL_UPDATE_HORSE);
+        this.delete = configurationManager.getProperty(SQL_DELETE_HORSE);
+        this.selectJoinHorseStartingPrice = configurationManager.getProperty(SQL_SELECT_HORSES_JOIN_HORSE_STARTING_PRICE);
+        this.selectJoinStartingPriceAndFirstHorseBet = configurationManager.getProperty(SQL_SELECT_HORSES_JOIN_STARTING_PRICE_AND_FIRST_HORSE_BET);
+        this.selectJoinStartingPriceAndFirstHorseBySPId = configurationManager.getProperty(SQL_SELECT_HORSE_JOIN_STARTING_PRICE_AND_FIRST_HORSE_BY_SPID);
+        this.selectJoinStartingPriceAndSecondHorseBet = configurationManager.getProperty(SQL_SELECT_HORSES_JOIN_STARTING_PRICE_AND_SECOND_HORSE_BET);
+        this.selectJoinHorseStartingPriceByRaceId = configurationManager.getProperty(SQL_SELECT_HORSES_JOIN_HORSE_STARTING_PRICE_BY_RACE_ID);
+        this.selectJoinHorseStartingPriceExcludingByRaceId = configurationManager.getProperty(SQL_SELECT_HORSES_JOIN_HORSE_STARTING_PRICE_EXCLUDING_BY_RACE_ID);
     }
 
     public static HorseDAOImpl getInstance() {
@@ -48,7 +73,7 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
         queryParams.put(1, id);
         Horse horse = null;
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorseById"), queryParams, true);
+        ResultSet rs = executeQuery(selectById, queryParams, true);
         try {
             if (rs.next()) {
                 horse = (Horse) builder.getEntity(rs);
@@ -61,7 +86,7 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
 
     @Override
     public List<Horse> getAll() throws HorseRaceBetException {
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorse"), null, true);
+        ResultSet rs = executeQuery(select, null, true);
 
         return getHorses(rs);
     }
@@ -70,7 +95,7 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
     public void save(Horse horse) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(horse);
 
-        executeQuery(configurationManager.getProperty("SQL.insertHorse"), queryParams, false);
+        executeQuery(insert, queryParams, false);
     }
 
     @Override
@@ -78,7 +103,7 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
         Map<Integer, Object> queryParams = buildParamsMap(horse);
         queryParams.put(5, horse.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.updateHorse"), queryParams, false);
+        executeQuery(update, queryParams, false);
     }
 
     @Override
@@ -86,18 +111,18 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, horse.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.deleteHorse"), queryParams, false);
+        executeQuery(delete, queryParams, false);
     }
 
     @Override
     public List<Horse> getJoinHorseStartingPrice() throws HorseRaceBetException {
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinHorseStartingPrice"), null, true);
+        ResultSet rs = executeQuery(selectJoinHorseStartingPrice, null, true);
         return getHorses(rs);
     }
 
     @Override
     public List<Horse> getJoinFirstHorseBetAndHorseStartingPrice() throws HorseRaceBetException {
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinStartingPriceAndFirstHorseBet"), null, true);
+        ResultSet rs = executeQuery(selectJoinStartingPriceAndFirstHorseBet, null, true);
 
         return getHorses(rs);
     }
@@ -108,7 +133,7 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, startingPriceId);
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorseJoinStartingPriceAndFirstHorseBySPId"), queryParams, true);
+        ResultSet rs = executeQuery(selectJoinStartingPriceAndFirstHorseBySPId, queryParams, true);
         try {
             while (rs.next()) {
                 horse = (Horse) builder.getEntity(rs);
@@ -121,7 +146,7 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
 
     @Override
     public List<Horse> getJoinSecondHorseBetAndHorseStartingPrice() throws HorseRaceBetException {
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinStartingPriceAndSecondHorseBet"), null, true);
+        ResultSet rs = executeQuery(selectJoinStartingPriceAndSecondHorseBet, null, true);
 
         return getHorses(rs);
     }
@@ -131,7 +156,7 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, raceId);
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinHorseStartingPriceByRaceId"), queryParams, true);
+        ResultSet rs = executeQuery(selectJoinHorseStartingPriceByRaceId, queryParams, true);
         return getHorses(rs);
     }
 
@@ -140,7 +165,7 @@ public class HorseDAOImpl extends AbstractDAO implements HorseDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, raceId);
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorsesJoinHorseStartingPriceExcludingByRaceId"), queryParams, true);
+        ResultSet rs = executeQuery(selectJoinHorseStartingPriceExcludingByRaceId, queryParams, true);
         return getHorses(rs);
     }
 

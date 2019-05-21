@@ -1,6 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.controller;
 
 import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
+import by.epam.javawebtraining.kukareko.horseracebet.util.constant.RegexpConstant;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Matcher;
@@ -15,7 +16,7 @@ public interface GetAction {
 
     default String getAction(HttpServletRequest request) {
         ConfigurationManager configurationManager = ConfigurationManager.getInstance();
-        String defineActionRegExp = configurationManager.getProperty("defineActionRegExp");
+        String defineActionRegExp = configurationManager.getProperty(RegexpConstant.DEFINE_ACTION_REG_EXP);
 
         Pattern pattern = Pattern.compile(defineActionRegExp);
         Matcher matcher = pattern.matcher(request.getRequestURI());

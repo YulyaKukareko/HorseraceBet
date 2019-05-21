@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.horsesp;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.SQLConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.AbstractBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.FactoryBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.TypeBuilder;
@@ -25,10 +27,29 @@ public class HorseStartingPriceDAOImpl extends AbstractDAO implements HorseStart
 
     private static HorseStartingPriceDAOImpl dao;
 
+    private String selectById;
+    private String select;
+    private String insert;
+    private String update;
+    private String delete;
+    private String selectJoinFirstHorseBet;
+    private String selectJoinSecondHorseBet;
+    private String selectByRaceId;
+    private String selectCountByRaceId;
+
     private AbstractBuilder builder;
 
     private HorseStartingPriceDAOImpl() {
-        builder = FactoryBuilder.getBuilder(TypeBuilder.HORSE_STARTING_PRICE);
+        this.selectById = configurationManager.getProperty(SQL_SELECT_HORSE_STARTING_PRICE_BY_ID);
+        this.select = configurationManager.getProperty(SQL_SELECT_STARTING_PRICE);
+        this.insert = configurationManager.getProperty(SQL_INSERT_HORSE_STARTING_PRICE);
+        this.update = configurationManager.getProperty(SQL_UPDATE_HORSE_STARTING_PRICE);
+        this.delete = configurationManager.getProperty(SQL_DELETE_HORSE_STARTING_PRICE);
+        this.selectJoinFirstHorseBet = configurationManager.getProperty(SQL_SELECT_HORSE_STARTING_PRICES_JOIN_FIRST_HORSE_BET);
+        this.selectJoinSecondHorseBet = configurationManager.getProperty(SQL_SELECT_HORSE_STARTING_PRICES_JOIN_SECOND_HORSE_BET);
+        this.selectByRaceId = configurationManager.getProperty(SQL_SELECT_STARTING_PRICE_BY_RACE_ID);
+        this.selectCountByRaceId = configurationManager.getProperty(SQL_SELECT_STARTING_PRICE_COUNT_BY_RACE_ID);
+        this.builder = FactoryBuilder.getBuilder(TypeBuilder.HORSE_STARTING_PRICE);
     }
 
     public static HorseStartingPriceDAOImpl getInstance() {
@@ -48,7 +69,7 @@ public class HorseStartingPriceDAOImpl extends AbstractDAO implements HorseStart
         queryParams.put(1, id);
         HorseStartingPrice horseStartingPrice = null;
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorseStartingPriceById"), queryParams, true);
+        ResultSet rs = executeQuery(selectById, queryParams, true);
 
         try {
             if (rs.next()) {
@@ -62,7 +83,7 @@ public class HorseStartingPriceDAOImpl extends AbstractDAO implements HorseStart
 
     @Override
     public List<HorseStartingPrice> getAll() throws HorseRaceBetException {
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectStartingPrice"), null, true);
+        ResultSet rs = executeQuery(select, null, true);
 
         return getHorseStartingPrices(rs);
     }
@@ -71,7 +92,7 @@ public class HorseStartingPriceDAOImpl extends AbstractDAO implements HorseStart
     public void save(HorseStartingPrice horseSP) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(horseSP);
 
-        executeQuery(configurationManager.getProperty("SQL.insertHorseStartingPrice"), queryParams, false);
+        executeQuery(insert, queryParams, false);
     }
 
     @Override
@@ -79,7 +100,7 @@ public class HorseStartingPriceDAOImpl extends AbstractDAO implements HorseStart
         Map<Integer, Object> queryParams = buildParamsMap(horseSP);
         queryParams.put(4, horseSP.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.updateHorseStartingPrice"), queryParams, false);
+        executeQuery(update, queryParams, false);
     }
 
     @Override
@@ -87,19 +108,19 @@ public class HorseStartingPriceDAOImpl extends AbstractDAO implements HorseStart
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, horseSP.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.deleteHorseStartingPrice"), queryParams, false);
+        executeQuery(delete, queryParams, false);
     }
 
     @Override
     public List<HorseStartingPrice> getJoinFirstHorsesBet() throws HorseRaceBetException {
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorseStartingPricesJoinFirstHorseBet"), null, true);
+        ResultSet rs = executeQuery(selectJoinFirstHorseBet, null, true);
 
         return getHorseStartingPrices(rs);
     }
 
     @Override
     public List<HorseStartingPrice> getJoinSecondHorsesBet() throws HorseRaceBetException {
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectHorseStartingPricesJoinSecondHorseBet"), null, true);
+        ResultSet rs = executeQuery(selectJoinSecondHorseBet, null, true);
 
         return getHorseStartingPrices(rs);
     }
@@ -109,7 +130,7 @@ public class HorseStartingPriceDAOImpl extends AbstractDAO implements HorseStart
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, raceId);
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectStartingPriceByRaceId"), queryParams, true);
+        ResultSet rs = executeQuery(selectByRaceId, queryParams, true);
         return getHorseStartingPrices(rs);
     }
 
@@ -119,7 +140,7 @@ public class HorseStartingPriceDAOImpl extends AbstractDAO implements HorseStart
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, raceId);
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectStartingPriceCountByRaceId"), queryParams, true);
+        ResultSet rs = executeQuery(selectCountByRaceId, queryParams, true);
         try {
             while (rs.next()) {
                 contRow = rs.getInt(1);

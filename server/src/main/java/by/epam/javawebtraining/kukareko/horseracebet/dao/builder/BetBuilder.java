@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.builder;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.EntityBuilderColumnConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Bet;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.BetType;
 
@@ -41,11 +43,11 @@ public class BetBuilder extends AbstractBuilder<Bet> {
 
         try {
             bet = new Bet();
-            bet.setId(rs.getLong("id"));
-            bet.setType(BetType.valueOf(rs.getString("type").toUpperCase()));
-            bet.setFirstStartingPriceHorseId(rs.getLong("first_horse_id"));
-            bet.setSecondStartingPriceHorseId(rs.getLong("second_horse_id"));
-            bet.setCoefficient(rs.getFloat("coefficient"));
+            bet.setId(rs.getLong(ID_COLUMN));
+            bet.setType(BetType.valueOf(rs.getString(TYPE_COLUMN).toUpperCase()));
+            bet.setFirstStartingPriceHorseId(rs.getLong(FIRST_HORSE_ID_COLUMN));
+            bet.setSecondStartingPriceHorseId(rs.getLong(SECOND_HORSE_ID_COLUMN));
+            bet.setCoefficient(rs.getFloat(COEFFICIENT_COLUMN));
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
         }

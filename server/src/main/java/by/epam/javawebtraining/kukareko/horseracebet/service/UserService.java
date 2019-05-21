@@ -11,6 +11,7 @@ import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.Dup
 import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.IncorrectInputParamException;
 import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
 import by.epam.javawebtraining.kukareko.horseracebet.util.CryptMD5;
+import by.epam.javawebtraining.kukareko.horseracebet.util.constant.ExceptionMessageConstant;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,14 +24,17 @@ import java.util.concurrent.locks.ReentrantLock;
 public class UserService {
 
     private static final ReentrantLock LOCK = new ReentrantLock();
-
-    private static ConfigurationManager configurationManager;
     private static UserService service;
+    private ConfigurationManager configurationManager;
+
+    private String duplicationEmailMessage;
 
     private UserDAO userDAO;
 
     private UserService() {
-        userDAO = UserDAOImpl.getInstance();
+        this.userDAO = UserDAOImpl.getInstance();
+        this.configurationManager = ConfigurationManager.getInstance();
+        this.duplicationEmailMessage = configurationManager.getProperty(ExceptionMessageConstant.DUPLICATION_EMAIL_MESSAGE);
     }
 
     public static UserService getInstance() {
@@ -38,7 +42,6 @@ public class UserService {
             LOCK.lock();
             if (service == null) {
                 service = new UserService();
-                configurationManager = ConfigurationManager.getInstance();
             }
             LOCK.unlock();
         }
@@ -64,8 +67,6 @@ public class UserService {
 
             userDAO.save(user);
         } else {
-            String duplicationEmailMessage = configurationManager.getProperty("duplicationEmailMessage");
-
             throw new DuplicationEmailException(duplicationEmailMessage);
         }
     }
@@ -74,20 +75,6 @@ public class UserService {
         validateId(id);
 
         return userDAO.getById(id);
-    }
-
-    public void makeBet(Long id, BigDecimal betMoney) throws HorseRaceBetException {
-        validateId(id);
-        validateMoney(betMoney);
-
-        BigDecimal userBalance = userDAO.getById(id).getBalance();
-        if (userBalance.subtract(betMoney).signum() > 0) {
-            userDAO.makeBet(id, betMoney);
-        } else {
-            String insufficientFundsMes = configurationManager.getProperty("insufficientFundsMessage");
-
-            throw new IncorrectInputParamException(insufficientFundsMes);
-        }
     }
 
     public void addUserBalanceMoney(Long id, BigDecimal betMoney) throws HorseRaceBetException {

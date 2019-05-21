@@ -1,4 +1,4 @@
-package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
+package by.epam.javawebtraining.kukareko.horseracebet.handler;
 
 import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBetException;
 import org.json.JSONObject;

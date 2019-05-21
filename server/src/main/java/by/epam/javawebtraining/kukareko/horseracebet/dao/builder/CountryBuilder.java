@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.builder;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.EntityBuilderColumnConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Country;
 
 import java.sql.ResultSet;
@@ -39,8 +41,8 @@ public class CountryBuilder extends AbstractBuilder<Country> {
 
         try {
             country = new Country();
-            country.setId(rs.getLong("id"));
-            country.setName(rs.getString("name"));
+            country.setId(rs.getLong(ID_COLUMN));
+            country.setName(rs.getString(NAME_COLUMN));
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
         }

@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.user;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.SQLConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.AbstractBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.FactoryBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.TypeBuilder;
@@ -9,6 +11,7 @@ import by.epam.javawebtraining.kukareko.horseracebet.model.exception.HorseRaceBe
 import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.DatabaseConnectionException;
 import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.IncorrectInputParamException;
 import by.epam.javawebtraining.kukareko.horseracebet.util.CryptMD5;
+import by.epam.javawebtraining.kukareko.horseracebet.util.constant.GeneralConstants;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -29,10 +32,27 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
 
     private static UserDAOImpl dao;
 
+    private String selectById;
+    private String insert;
+    private String select;
+    private String update;
+    private String delete;
+    private String checkByLoginAndPassword;
+    private String checkExistsEmail;
+    private String addBalanceMoney;
+
     private AbstractBuilder builder;
 
     private UserDAOImpl() {
-        builder = FactoryBuilder.getBuilder(TypeBuilder.USER);
+        this.builder = FactoryBuilder.getBuilder(TypeBuilder.USER);
+        this.selectById = configurationManager.getProperty(SQL_SELECT_USER_BY_ID);
+        this.insert = configurationManager.getProperty(SQL_INSERT_USER);
+        this.select = configurationManager.getProperty(SQL_SELECT_USER);
+        this.update = configurationManager.getProperty(SQL_UPDATE_USER);
+        this.delete = configurationManager.getProperty(SQL_DELETE_USER);
+        this.checkByLoginAndPassword = configurationManager.getProperty(SQL_CHECK_USER_BY_LOGIN_AND_PASSWORD);
+        this.checkExistsEmail = configurationManager.getProperty(SQL_CHECK_EXISTS_EMAIL);
+        this.addBalanceMoney = configurationManager.getProperty(SQL_ADDING_USER_BALANCE_MONEY);
     }
 
     public static UserDAOImpl getInstance() {
@@ -51,7 +71,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, id);
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectUserById"), queryParams, true);
+        ResultSet rs = executeQuery(selectById, queryParams, true);
         return getUser(rs);
     }
 
@@ -61,14 +81,14 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         user.setPassword(cryptoPassword);
         Map<Integer, Object> queryParams = buildParamsMap(user);
 
-        executeQuery(configurationManager.getProperty("SQL.insertUser"), queryParams, false);
+        executeQuery(insert, queryParams, false);
     }
 
     @Override
     public List<User> getAll() throws HorseRaceBetException {
         List<User> users = new ArrayList<>();
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectUser"), null, true);
+        ResultSet rs = executeQuery(select, null, true);
         try {
             while (rs.next()) {
                 users.add((User) builder.getEntity(rs));
@@ -84,7 +104,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         Map<Integer, Object> queryParams = buildParamsMap(user);
         queryParams.put(7, user.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.updateUser"), queryParams, false);
+        executeQuery(update, queryParams, false);
     }
 
     @Override
@@ -92,16 +112,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, user.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.deleteUser"), queryParams, false);
-    }
-
-    @Override
-    public void makeBet(long id, BigDecimal betMoney) throws HorseRaceBetException {
-        Map<Integer, Object> queryParams = new HashMap<>();
-        queryParams.put(1, betMoney);
-        queryParams.put(2, id);
-
-        executeQuery(configurationManager.getProperty("SQL.makeBet"), queryParams, false);
+        executeQuery(delete, queryParams, false);
     }
 
     @Override
@@ -110,8 +121,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         queryParams.put(1, login);
         queryParams.put(2, password);
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.checkUserByLoginAndPassword"),
-                queryParams, true);
+        ResultSet rs = executeQuery(checkByLoginAndPassword, queryParams, true);
 
         return getUser(rs);
     }
@@ -121,10 +131,10 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, email);
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.checkExistsEmail"), queryParams, true);
+        ResultSet rs = executeQuery(checkExistsEmail, queryParams, true);
         try {
             if ((rs.next())) {
-                return rs.getInt("exist") == 0;
+                return rs.getInt(GeneralConstants.EXIST_COLUMN) == 0;
             }
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
@@ -150,7 +160,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         queryParams.put(1, money);
         queryParams.put(2, id);
 
-        executeQuery(configurationManager.getProperty("SQL.addingUserBalanceMoney"), queryParams, false);
+        executeQuery(addBalanceMoney, queryParams, false);
     }
 
     private Map<Integer, Object> buildParamsMap(User user) {

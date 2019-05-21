@@ -4,6 +4,7 @@ import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.Dat
 import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.IncorrectInputParamException;
 import by.epam.javawebtraining.kukareko.horseracebet.model.exception.logical.TransactionNotCompleteException;
 import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
+import by.epam.javawebtraining.kukareko.horseracebet.util.constant.*;
 import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
@@ -20,18 +21,26 @@ public class AbstractDAO {
 
     protected static ConfigurationManager configurationManager;
 
+    private String inputParametersIncorrectMes;
+    private String transactionNotCompletedMes;
+    private String databaseNotRespondingMes;
+
     private PoolConnection pool;
 
     static {
-        LOGGER = Logger.getLogger("DAOLayerLog");
+        LOGGER = Logger.getLogger(LogConstant.DAO_LAYER_LOG);
         configurationManager = ConfigurationManager.getInstance();
     }
 
     public AbstractDAO() {
-        pool = PoolConnection.getInstance();
+        this.pool = PoolConnection.getInstance();
+        this.inputParametersIncorrectMes = configurationManager.getProperty(ExceptionMessageConstant.INPUT_PARAMETERS_INCORRECT_MESSAGE);
+        this.transactionNotCompletedMes = configurationManager.getProperty(ExceptionMessageConstant.TRANSACTION_NOT_COMPLETED_MESSAGE);
+        this.databaseNotRespondingMes = configurationManager.getProperty(ExceptionMessageConstant.DATABASE_NOT_RESPONDING_MESSAGE);
     }
 
-    protected final ResultSet executeProcedure(String procedureName, Map<Integer, Object> params, boolean isExecuteQuery) throws TransactionNotCompleteException {
+    protected final ResultSet executeProcedure(String procedureName, Map<Integer, Object> params, boolean isExecuteQuery)
+            throws TransactionNotCompleteException {
         ResultSet result;
         Connection connection = pool.getConnection();
 
@@ -40,14 +49,15 @@ public class AbstractDAO {
             result = executeQuery(statement, params, isExecuteQuery);
 
         } catch (SQLException e) {
-            throw new TransactionNotCompleteException("Transaction not completed. Try again");
+            throw new TransactionNotCompleteException(transactionNotCompletedMes);
         }
         pool.releaseConnection(connection);
 
         return result;
     }
 
-    protected final ResultSet executeQuery(String query, Map<Integer, Object> params, boolean isExecuteQuery) throws IncorrectInputParamException, DatabaseConnectionException {
+    protected final ResultSet executeQuery(String query, Map<Integer, Object> params, boolean isExecuteQuery)
+            throws IncorrectInputParamException, DatabaseConnectionException {
         ResultSet result;
         Connection connection = pool.getConnection();
 
@@ -56,10 +66,10 @@ public class AbstractDAO {
             result = executeQuery(statement, params, isExecuteQuery);
 
         } catch (SQLIntegrityConstraintViolationException ex) {
-            throw new IncorrectInputParamException(configurationManager.getProperty("inputParametersIncorrectMessage"));
+            throw new IncorrectInputParamException(inputParametersIncorrectMes);
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
-            throw new DatabaseConnectionException(configurationManager.getProperty("databaseNotRespondingMessage"));
+            throw new DatabaseConnectionException(databaseNotRespondingMes);
         }
         pool.releaseConnection(connection);
 
@@ -85,38 +95,38 @@ public class AbstractDAO {
 
     private void defineFieldStatement(Integer index, Object param, PreparedStatement statement) throws SQLException {
         switch (param.getClass().getSimpleName()) {
-            case "Integer":
+            case ParamTypeConstant.INTEGER_VALUE:
                 statement.setInt(index, (Integer) param);
                 break;
-            case "Float":
+            case ParamTypeConstant.FLOAT_VALUE:
                 statement.setFloat(index, (Float) param);
                 break;
-            case "Double":
+            case ParamTypeConstant.DOUBLE_VALUE:
                 statement.setDouble(index, (Double) param);
                 break;
-            case "Long":
+            case ParamTypeConstant.LONG_VALUE:
                 statement.setDouble(index, (Long) param);
                 break;
-            case "BigDecimal":
+            case ParamTypeConstant.BIG_DECIMAL_VALUE:
                 statement.setBigDecimal(index, (BigDecimal) param);
                 break;
-            case "Timestamp":
+            case ParamTypeConstant.TIMESTAMP_VALUE:
                 statement.setTimestamp(index, (Timestamp) param);
                 break;
-            case "RaceType":
+            case ParamTypeConstant.RACE_TYPE_VALUE:
                 statement.setString(index, param.toString());
                 break;
-            case "Role":
+            case ParamTypeConstant.ROLE_VALUE:
                 statement.setString(index, param.toString());
                 break;
-            case "BetType":
+            case ParamTypeConstant.BET_TYPE_VALUE:
                 statement.setString(index, param.toString());
                 break;
-            case "Boolean":
+            case ParamTypeConstant.BOOLEAN_VALUE:
                 statement.setBoolean(index, (Boolean) param);
                 break;
             default:
-                if (param.equals("NULL")) {
+                if (param.equals(SQLConstant.NULL_VALUE)) {
                     statement.setNull(index, Types.INTEGER);
                 } else {
                     statement.setString(index, (String) param);

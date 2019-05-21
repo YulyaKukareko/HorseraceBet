@@ -1,4 +1,7 @@
-package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
+package by.epam.javawebtraining.kukareko.horseracebet.handler;
+
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.ActionConstant.*;
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.JSONParamConstant.*;
 
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetAction;
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetParams;
@@ -22,41 +25,46 @@ import java.util.List;
 public class BetCommand implements Command, GetAction, GetParams {
 
     private String responseParamResult;
+    private String betIdParam;
+    private String requestParamId;
+    private String requestParamRaceId;
+    private String requestParamBetType;
 
     private ConfigurationManager configurationManager;
 
     private BetService service;
 
     public BetCommand() {
-        this.responseParamResult = configurationManager.getProperty("configJSON.result");
-        service = BetService.getInstance();
-        configurationManager = ConfigurationManager.getInstance();
+        this.configurationManager = ConfigurationManager.getInstance();
+        this.service = BetService.getInstance();
+        this.responseParamResult = configurationManager.getProperty(CONFIG_JSON_RESULT);
+        this.betIdParam = configurationManager.getProperty(REQUEST_PARAM_BET_ID);
+        this.requestParamId = configurationManager.getProperty(PARAMS_ID);
+        this.requestParamRaceId = configurationManager.getProperty(REQUEST_PARAM_RACE_ID);
+        this.requestParamBetType = configurationManager.getProperty(REQUEST_PARAM_BET_TYPE);
     }
 
     @Override
     public JSONObject execute(HttpServletRequest request) throws HorseRaceBetException {
-        String responseParamResult = configurationManager.getProperty("configJSON.result");
-
         JSONObject result = new JSONObject();
 
         switch (getAction(request)) {
-            case "create":
+            case CREATE:
                 Bet bet = new Gson().fromJson(getParam(request), Bet.class);
 
                 service.save(bet);
                 break;
-            case "getAll":
+            case GET_ALL:
                 List<Bet> bets = service.getAll();
 
                 result.put(responseParamResult, new JSONArray(bets));
                 break;
-            case "update":
+            case UPDATE:
                 bet = new Gson().fromJson(getParam(request), Bet.class);
 
                 service.update(bet);
                 break;
-            case "getById":
-                String betIdParam = configurationManager.getProperty("requestParam.betId");
+            case GET_BY_ID:
 
                 JSONObject json = new JSONObject(getParam(request));
                 long betId = Long.parseLong(json.get(betIdParam).toString());
@@ -65,11 +73,7 @@ public class BetCommand implements Command, GetAction, GetParams {
 
                 result.put(responseParamResult, new JSONObject(bet));
                 break;
-            case "getAllByRaceIdAndBetType":
-                String requestParamId = configurationManager.getProperty("params.id");
-                String requestParamRaceId = configurationManager.getProperty("requestParam.raceId");
-                String requestParamBetType = configurationManager.getProperty("requestParam.betType");
-
+            case GET_ALL_BY_RACE_ID_AND_BET_TYPE:
                 json = new JSONObject(getParam(request));
                 HttpSession session = request.getSession();
 
@@ -80,7 +84,7 @@ public class BetCommand implements Command, GetAction, GetParams {
                 bets = service.getByRaceIdAndBetType(raceId, betType, userId);
                 result.put(responseParamResult, new JSONArray(bets));
                 break;
-            case "getAllTypes":
+            case GET_ALL_TYPES:
                 List<BetType> types = Arrays.asList(BetType.values());
 
                 result.put(responseParamResult, new JSONArray(types));

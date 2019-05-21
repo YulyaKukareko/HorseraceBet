@@ -7,7 +7,7 @@
 
   <filter>
     <filter-name>CharacterSetFilter</filter-name>
-    <filter-class>by.epam.javawebtraining.kukareko.horseracebet.controller.filter.CharacterSetFilter</filter-class>
+    <filter-class>by.epam.javawebtraining.kukareko.horseracebet.filter.CharacterSetFilter</filter-class>
   </filter>
 
   <filter-mapping>
@@ -24,11 +24,6 @@
     <servlet-name>LoginController</servlet-name>
     <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
-
-  <error-page>
-    <error-code>404</error-code>
-    <location>/index.jsp</location>
-  </error-page>
 
   <taglib>
     <taglib-uri>customtags</taglib-uri>

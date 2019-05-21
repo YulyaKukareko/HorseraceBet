@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.userbet;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.SQLConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.AbstractBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.FactoryBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.TypeBuilder;
@@ -17,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Yulya Kukareko
- * @version 1.0 28 Апр. 2019
+ * @version 1.0 28 Apr. 2019
  */
 public class UserBetDAOImpl extends AbstractDAO implements UserBetDAO {
 
@@ -25,10 +27,23 @@ public class UserBetDAOImpl extends AbstractDAO implements UserBetDAO {
 
     private static UserBetDAOImpl dao;
 
+    private String selectById;
+    private String select;
+    private String insert;
+    private String selectByUserId;
+    private String update;
+    private String delete;
+
     private AbstractBuilder builder;
 
     private UserBetDAOImpl() {
-        builder = FactoryBuilder.getBuilder(TypeBuilder.USER_BET);
+        this.builder = FactoryBuilder.getBuilder(TypeBuilder.USER_BET);
+        this.selectById = configurationManager.getProperty(SQL_SELECT_USER_BET_BY_ID);
+        this.select = configurationManager.getProperty(SQL_SELECT_USER_BET);
+        this.insert = configurationManager.getProperty(SQL_INSERT_USER_BET);
+        this.selectByUserId = configurationManager.getProperty(SQL_SELECT_USER_BET_BY_USER_ID);
+        this.update = configurationManager.getProperty(SQL_UPDATE_USER_BET);
+        this.delete = configurationManager.getProperty(SQL_DELETE_USER_BET);
     }
 
     public static UserBetDAOImpl getInstance() {
@@ -48,7 +63,7 @@ public class UserBetDAOImpl extends AbstractDAO implements UserBetDAO {
         queryParams.put(1, id);
         UserBet userBet = null;
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectUserBetById"), queryParams, true);
+        ResultSet rs = executeQuery(selectById, queryParams, true);
         try {
             if (rs.next()) {
                 userBet = (UserBet) builder.getEntity(rs);
@@ -61,7 +76,7 @@ public class UserBetDAOImpl extends AbstractDAO implements UserBetDAO {
 
     @Override
     public List<UserBet> getAll() throws HorseRaceBetException {
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectUserBet"), null, true);
+        ResultSet rs = executeQuery(select, null, true);
         return getUserBets(rs);
     }
 
@@ -69,7 +84,7 @@ public class UserBetDAOImpl extends AbstractDAO implements UserBetDAO {
     public void save(UserBet userBet) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(userBet);
 
-        executeProcedure(configurationManager.getProperty("SQL.insertUserBet"), queryParams, false);
+        executeProcedure(insert, queryParams, false);
     }
 
     @Override
@@ -78,7 +93,7 @@ public class UserBetDAOImpl extends AbstractDAO implements UserBetDAO {
 
         queryParams.put(1, userId);
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectUserBetByUserId"), queryParams, true);
+        ResultSet rs = executeQuery(selectByUserId, queryParams, true);
         return getUserBets(rs);
     }
 
@@ -87,7 +102,7 @@ public class UserBetDAOImpl extends AbstractDAO implements UserBetDAO {
         Map<Integer, Object> queryParams = buildParamsMap(userBet);
         queryParams.put(6, userBet.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.updateUserBet"), queryParams, false);
+        executeQuery(update, queryParams, false);
     }
 
     @Override
@@ -95,7 +110,7 @@ public class UserBetDAOImpl extends AbstractDAO implements UserBetDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, userBet.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.deleteUserBet"), queryParams, false);
+        executeQuery(delete, queryParams, false);
     }
 
     private List<UserBet> getUserBets(ResultSet rs) {

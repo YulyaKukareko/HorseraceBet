@@ -10,7 +10,7 @@
     <uri>customtags</uri>
     <tag>
         <name>error-tag</name>
-        <tag-class>by.epam.javawebtraining.kukareko.horseracebet.controller.tag.NotFoundTag</tag-class>
+        <tag-class>by.epam.javawebtraining.kukareko.horseracebet.tag.NotFoundTag</tag-class>
         <body-content>empty</body-content>
     </tag>
 </taglib>

@@ -1,4 +1,7 @@
-package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
+package by.epam.javawebtraining.kukareko.horseracebet.handler;
+
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.ActionConstant.*;
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.JSONParamConstant.*;
 
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetAction;
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetParams;
@@ -11,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -22,11 +24,16 @@ public class ResultCommand implements Command, GetAction, GetParams {
 
     private ConfigurationManager configurationManager;
 
+    private String responseParamResult;
+    private String requestParamRaceId;
+
     private ResultService service;
 
     public ResultCommand() {
-        configurationManager = ConfigurationManager.getInstance();
-        service = ResultService.getInstance();
+        this.configurationManager = ConfigurationManager.getInstance();
+        this.service = ResultService.getInstance();
+        this.responseParamResult = configurationManager.getProperty(CONFIG_JSON_RESULT);
+        this.requestParamRaceId = configurationManager.getProperty(REQUEST_PARAM_RACE_ID);
     }
 
     @Override
@@ -34,15 +41,12 @@ public class ResultCommand implements Command, GetAction, GetParams {
         JSONObject resultJSON = new JSONObject();
 
         switch (getAction(request)) {
-            case "create":
+            case CREATE:
                 Result result = new Gson().fromJson(getParam(request), Result.class);
 
                 service.save(result);
                 break;
-            case "getByRaceId":
-                String responseParamResult = configurationManager.getProperty("configJSON.result");
-                String requestParamRaceId = configurationManager.getProperty("requestParam.raceId");
-
+            case GET_BY_RACE_ID:
                 JSONObject json = new JSONObject(getParam(request));
                 long raceId = Long.parseLong(json.get(requestParamRaceId).toString());
 

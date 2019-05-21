@@ -1,6 +1,9 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.DatabaseConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.util.ConfigurationManager;
+import by.epam.javawebtraining.kukareko.horseracebet.util.constant.LogConstant;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
@@ -23,16 +26,29 @@ public class PoolConnection {
     private static PoolConnection instance;
     private static BlockingQueue<Connection> connections;
 
+    private String driverDB;
+    private String urlDB;
+    private String userDB;
+    private String passwordDB;
+    private int poolConnectionSize;
+    private int connectionTimeout;
+
     private ConfigurationManager configurationManager;
 
     static {
-        LOGGER = Logger.getLogger("PoolConnectionLog");
+        LOGGER = Logger.getLogger(LogConstant.POOL_CONNECTION_LOG);
         LOCK = new ReentrantLock();
     }
 
     private PoolConnection() {
         this.configurationManager = ConfigurationManager.getInstance();
-        connections = new ArrayBlockingQueue<>(8);
+        this.connections = new ArrayBlockingQueue<>(8);
+        this.driverDB = configurationManager.getProperty(DRIVER);
+        this.urlDB = configurationManager.getProperty(DB_CONFIG_URL);
+        this.userDB = configurationManager.getProperty(DB_CONFIG_USER);
+        this.passwordDB = configurationManager.getProperty(DB_CONFIG_PASSWORD);
+        this.connectionTimeout = Integer.parseInt(configurationManager.getProperty(CONNECT_POOL_TIMEOUT));
+        this.poolConnectionSize = Integer.parseInt(configurationManager.getProperty(DB_POOL_CONNECTION_SIZE));
         init();
     }
 
@@ -49,7 +65,7 @@ public class PoolConnection {
 
     private void init() {
         try {
-            Class.forName(configurationManager.getProperty("driver"));
+            Class.forName(driverDB);
 
             for (int i = 0; i < 8; i++) {
                 Connection connection = getNewConnection();
@@ -63,7 +79,7 @@ public class PoolConnection {
     public final Connection getConnection() {
         Connection conn = null;
         try {
-            conn = connections.poll(5, TimeUnit.SECONDS);
+            conn = connections.poll(connectionTimeout, TimeUnit.SECONDS);
             if (conn == null) {
                 conn = getNewConnection();
                 connections.offer(conn);
@@ -77,8 +93,7 @@ public class PoolConnection {
     private Connection getNewConnection() {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(configurationManager.getProperty("dbConfig.url"), configurationManager.getProperty("dbConfig.user"),
-                    configurationManager.getProperty("dbConfig.password"));
+            connection = DriverManager.getConnection(urlDB, userDB, passwordDB);
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
         }

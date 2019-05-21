@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.builder;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.EntityBuilderColumnConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.Race;
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.RaceType;
 
@@ -41,13 +43,13 @@ public class RaceBuilder extends AbstractBuilder<Race> {
 
         try {
             race = new Race();
-            race.setId(rs.getLong("id"));
-            race.setName(rs.getString("name"));
-            race.setCountryId(rs.getLong("country_id"));
-            race.setTime(rs.getTimestamp("time"));
-            race.setType(RaceType.valueOf(rs.getString("type").toUpperCase()));
-            race.setPurse(rs.getBigDecimal("purse"));
-            race.setDistance(rs.getDouble("distance"));
+            race.setId(rs.getLong(ID_COLUMN));
+            race.setName(rs.getString(NAME_COLUMN));
+            race.setCountryId(rs.getLong(COUNTRY_ID_COLUMN));
+            race.setTime(rs.getTimestamp(TIME_COLUMN));
+            race.setType(RaceType.valueOf(rs.getString(TYPE_COLUMN).toUpperCase()));
+            race.setPurse(rs.getBigDecimal(PURSE_COLUMN));
+            race.setDistance(rs.getDouble(DISTANCE_COLUMN));
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
         }

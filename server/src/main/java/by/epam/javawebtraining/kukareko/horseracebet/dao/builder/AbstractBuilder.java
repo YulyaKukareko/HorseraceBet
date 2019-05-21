@@ -1,5 +1,6 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.builder;
 
+import by.epam.javawebtraining.kukareko.horseracebet.util.constant.LogConstant;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -13,7 +14,7 @@ public abstract class AbstractBuilder<T> {
     protected static final Logger LOGGER;
 
     static {
-        LOGGER = Logger.getLogger("BuilderLog");
+        LOGGER = Logger.getLogger(LogConstant.BUILDER_LOG);
     }
 
     public abstract T getEntity(ResultSet rs);

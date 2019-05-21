@@ -1,4 +1,7 @@
-package by.epam.javawebtraining.kukareko.horseracebet.controller.handler;
+package by.epam.javawebtraining.kukareko.horseracebet.handler;
+
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.JSONParamConstant.*;
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.ActionConstant.*;
 
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetAction;
 import by.epam.javawebtraining.kukareko.horseracebet.controller.GetParams;
@@ -11,7 +14,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -20,51 +22,60 @@ import java.util.List;
  */
 public class HorseCommand implements Command, GetParams, GetAction {
 
+
     private ConfigurationManager configurationManager;
+
+    private String responseParamResult;
+    private String requestParamRaceId;
+    private String requestParamNoResult;
+    private String requestParamId;
+    private String requestStartingSP;
 
     private HorseService service;
 
     public HorseCommand() {
-        service = HorseService.getInstance();
-        configurationManager = ConfigurationManager.getInstance();
+        this.service = HorseService.getInstance();
+        this.configurationManager = ConfigurationManager.getInstance();
+        this.responseParamResult = configurationManager.getProperty(CONFIG_JSON_RESULT);
+        this.requestParamRaceId = configurationManager.getProperty(REQUEST_PARAM_RACE_ID);
+        this.requestParamNoResult = configurationManager.getProperty(RESPONSE_PARAM_NO_RESULT);
+        this.requestParamId = configurationManager.getProperty(PARAMS_ID);
+        this.requestStartingSP = configurationManager.getProperty(RESPONSE_PARAM_STARTING_PRICE_ID);
     }
 
     @Override
     public JSONObject execute(HttpServletRequest request) throws HorseRaceBetException {
-        String responseParamResult = configurationManager.getProperty("configJSON.result");
-        String requestParamRaceId = configurationManager.getProperty("requestParam.raceId");
-        String requestParamNoResult = configurationManager.getProperty("responseParam.noResult");
 
         JSONObject result = new JSONObject();
 
         switch (getAction(request)) {
-            case "create":
+            case CREATE:
                 Horse horse;
                 horse = new Gson().fromJson(getParam(request), Horse.class);
 
                 service.save(horse);
                 break;
-            case "delete":
-                    horse = new Gson().fromJson(getParam(request), Horse.class);
+            case DELETE:
+                horse = new Gson().fromJson(getParam(request), Horse.class);
 
                 service.delete(horse);
                 break;
-            case "update":
+            case UPDATE:
                 horse = new Gson().fromJson(getParam(request), Horse.class);
 
                 service.update(horse);
                 break;
-            case "getAll":
+            case GET_ALL:
                 List<Horse> horses = service.getAll();
 
                 result.put(responseParamResult, new JSONArray(horses));
                 break;
-            case "getHorsesStartingPrices":
+            case GET_HORSES_STARTING_PRICES:
                 horses = service.getJoinHorseStartingPrice();
 
                 result.put(responseParamResult, new JSONArray(horses));
                 break;
-            case "getHorsesStartingPricesExcludingByRaceId":
+            case GET_HORSES_STARTING_PRICES_EXCLUDING_BY_RACE_ID:
                 JSONObject json = new JSONObject(getParam(request));
                 long raceId = Long.parseLong(json.get(requestParamRaceId).toString());
 
@@ -72,7 +83,7 @@ public class HorseCommand implements Command, GetParams, GetAction {
 
                 result.put(responseParamResult, new JSONArray(horses));
                 break;
-            case "getHorsesStartingPricesByRaceId":
+            case GET_HORSES_STARTING_PRICES_BY_RACE_ID:
                 json = new JSONObject(getParam(request));
                 raceId = Long.parseLong(json.get(requestParamRaceId).toString());
 
@@ -80,18 +91,17 @@ public class HorseCommand implements Command, GetParams, GetAction {
 
                 result.put(responseParamResult, new JSONArray(horses));
                 break;
-            case "getHorsesFirstBets":
+            case GET_HORSES_FIRST_BETS:
                 horses = service.getJoinFirstBetAndHorseStartingPrice();
 
                 result.put(responseParamResult, new JSONArray(horses));
                 break;
-            case "getHorsesSecondBets":
+            case GET_HORSES_SECOND_BETS:
                 horses = service.getJoinSecondBetAndHorseStartingPrice();
 
                 result.put(responseParamResult, new JSONArray(horses));
                 break;
-            case "getHorsesStartingPricesByStartingPriceId":
-                String requestStartingSP = configurationManager.getProperty("responseParam.startingPriceId");
+            case GET_HORSES_STARTING_PRICES_BY_STARTING_PRICE_ID:
 
                 json = new JSONObject(getParam(request));
                 long startingPriceId = Long.parseLong(json.get(requestStartingSP).toString());
@@ -104,8 +114,7 @@ public class HorseCommand implements Command, GetParams, GetAction {
                     result.put(responseParamResult, requestParamNoResult);
                 }
                 break;
-            case "getById":
-                String requestParamId = configurationManager.getProperty("params.id");
+            case GET_BY_ID:
 
                 json = new JSONObject(getParam(request));
                 long horseId = Long.parseLong(json.get(requestParamId).toString());

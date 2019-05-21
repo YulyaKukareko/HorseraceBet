@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.result;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.SQLConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.AbstractBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.FactoryBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.TypeBuilder;
@@ -25,10 +27,23 @@ public class ResultDAOImpl extends AbstractDAO implements ResultDAO {
 
     private static ResultDAOImpl dao;
 
+    private String selectById;
+    private String insert;
+    private String select;
+    private String update;
+    private String delete;
+    private String selectByRaceId;
+
     private AbstractBuilder builder;
 
     private ResultDAOImpl() {
-        builder = FactoryBuilder.getBuilder(TypeBuilder.RESULT);
+        this.builder = FactoryBuilder.getBuilder(TypeBuilder.RESULT);
+        this.selectById = configurationManager.getProperty(SQL_SELECT_RESULT_BY_ID);
+        this.insert = configurationManager.getProperty(SQL_INSERT_RESULT);
+        this.select = configurationManager.getProperty(SQL_SELECT_RESULT);
+        this.update = configurationManager.getProperty(SQL_UPDATE_RESULT);
+        this.delete = configurationManager.getProperty(SQL_DELETE_RESULT);
+        this.selectByRaceId = configurationManager.getProperty(SQL_SELECT_RESULT_BY_RACE_ID);
     }
 
     public static ResultDAOImpl getInstance() {
@@ -48,7 +63,7 @@ public class ResultDAOImpl extends AbstractDAO implements ResultDAO {
         queryParams.put(1, id);
         Result result = null;
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectResultById"), queryParams, true);
+        ResultSet rs = executeQuery(selectById, queryParams, true);
         try {
             if (rs.next()) {
                 result = (Result) builder.getEntity(rs);
@@ -61,7 +76,7 @@ public class ResultDAOImpl extends AbstractDAO implements ResultDAO {
 
     @Override
     public List<Result> getAll() throws HorseRaceBetException {
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectResult"), null, true);
+        ResultSet rs = executeQuery(select, null, true);
 
         return getResults(rs);
     }
@@ -70,7 +85,7 @@ public class ResultDAOImpl extends AbstractDAO implements ResultDAO {
     public void save(Result result) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(result);
 
-        executeQuery(configurationManager.getProperty("SQL.insertResult"), queryParams, false);
+        executeQuery(insert, queryParams, false);
     }
 
     @Override
@@ -78,7 +93,7 @@ public class ResultDAOImpl extends AbstractDAO implements ResultDAO {
         Map<Integer, Object> queryParams = buildParamsMap(result);
         queryParams.put(4, result.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.updateResult"), queryParams, false);
+        executeQuery(update, queryParams, false);
     }
 
     @Override
@@ -86,7 +101,7 @@ public class ResultDAOImpl extends AbstractDAO implements ResultDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, result.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.deleteResult"), queryParams, false);
+        executeQuery(delete, queryParams, false);
     }
 
     @Override
@@ -94,7 +109,7 @@ public class ResultDAOImpl extends AbstractDAO implements ResultDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, raceId);
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectResultByRaceId"), queryParams, true);
+        ResultSet rs = executeQuery(selectByRaceId, queryParams, true);
         return getResults(rs);
     }
 

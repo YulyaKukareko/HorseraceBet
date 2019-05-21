@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.builder;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.EntityBuilderColumnConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.model.entity.UserBet;
 
 import java.sql.ResultSet;
@@ -40,13 +42,13 @@ public class UserBetBuilder extends AbstractBuilder<UserBet> {
 
         try {
             userBet = new UserBet();
-            userBet.setId(rs.getLong("id"));
-            userBet.setBetId(rs.getLong("bet_id"));
-            userBet.setUserId(rs.getLong("user_id"));
-            userBet.setBetMoney(rs.getBigDecimal("bet_money"));
-            userBet.setHaveSp(rs.getBoolean("have_sp"));
-            userBet.setStatus(rs.getString("status"));
-            userBet.setCoefficient(rs.getFloat("coefficient"));
+            userBet.setId(rs.getLong(ID_COLUMN));
+            userBet.setBetId(rs.getLong(BET_ID_COLUMN));
+            userBet.setUserId(rs.getLong(USER_ID_COLUMN));
+            userBet.setBetMoney(rs.getBigDecimal(BET_MONEY_COLUMN));
+            userBet.setHaveSp(rs.getBoolean(HAVE_SP));
+            userBet.setStatus(rs.getString(STATUS_COLUMN));
+            userBet.setCoefficient(rs.getFloat(COEFFICIENT_COLUMN));
         } catch (SQLException ex) {
             LOGGER.error(ex.getMessage());
         }

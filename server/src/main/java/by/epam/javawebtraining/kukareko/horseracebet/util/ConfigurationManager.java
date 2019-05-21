@@ -1,6 +1,8 @@
 package by.epam.javawebtraining.kukareko.horseracebet.util;
 
 
+import by.epam.javawebtraining.kukareko.horseracebet.util.constant.GeneralConstants;
+
 import java.util.ResourceBundle;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -23,7 +25,7 @@ public class ConfigurationManager {
             LOCK.lock();
             if (instance == null) {
                 instance = new ConfigurationManager();
-                instance.resourceBundle = ResourceBundle.getBundle("config");
+                instance.resourceBundle = ResourceBundle.getBundle(GeneralConstants.CONFIG);
             }
             LOCK.unlock();
         }

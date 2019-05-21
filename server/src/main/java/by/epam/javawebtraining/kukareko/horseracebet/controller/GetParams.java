@@ -1,5 +1,6 @@
 package by.epam.javawebtraining.kukareko.horseracebet.controller;
 
+import by.epam.javawebtraining.kukareko.horseracebet.util.constant.LogConstant;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +12,7 @@ import java.io.BufferedReader;
  */
 public interface GetParams {
 
-    Logger LOGGER = Logger.getLogger("JSONParserLog");
+    Logger LOGGER = Logger.getLogger(LogConstant.JSON_PARSER_LOG);
 
     default String getParam(HttpServletRequest request) {
         StringBuilder jb = new StringBuilder();

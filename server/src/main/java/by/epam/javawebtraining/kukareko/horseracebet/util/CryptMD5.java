@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.util;
 
+import by.epam.javawebtraining.kukareko.horseracebet.util.constant.GeneralConstants;
+import by.epam.javawebtraining.kukareko.horseracebet.util.constant.LogConstant;
 import org.apache.log4j.Logger;
 
 import java.security.MessageDigest;
@@ -15,7 +17,7 @@ public class CryptMD5 {
     private static ConfigurationManager configurationManager;
 
     static {
-        LOGGER = Logger.getLogger("CryptMD5Log");
+        LOGGER = Logger.getLogger(LogConstant.CRYPT_MD_5_LOG);
         configurationManager = ConfigurationManager.getInstance();
     }
 
@@ -25,7 +27,7 @@ public class CryptMD5 {
         try {
             MessageDigest md;
 
-            String cryptoAlgorithm = configurationManager.getProperty("cryptoAlgorithm");
+            String cryptoAlgorithm = configurationManager.getProperty(GeneralConstants.CRYPTO_ALGORITHM);
             md = MessageDigest.getInstance(cryptoAlgorithm);
             byte[] passBytes = pass.getBytes();
 
@@ -40,9 +42,5 @@ public class CryptMD5 {
             LOGGER.error(ex.getMessage());
         }
         return sb.toString();
-    }
-
-    public static void main(String[] args) {
-        System.out.println(cryptWithMD5("Hello"));
     }
 }

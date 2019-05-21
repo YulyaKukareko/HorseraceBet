@@ -1,5 +1,7 @@
 package by.epam.javawebtraining.kukareko.horseracebet.dao.bet;
 
+import static by.epam.javawebtraining.kukareko.horseracebet.util.constant.SQLConstant.*;
+
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.AbstractBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.FactoryBuilder;
 import by.epam.javawebtraining.kukareko.horseracebet.dao.builder.TypeBuilder;
@@ -26,10 +28,23 @@ public class BetDAOImpl extends AbstractDAO implements BetDAO {
 
     private static BetDAOImpl dao;
 
+    private String selectById;
+    private String select;
+    private String selectByRaceIdAndBetType;
+    private String insert;
+    private String update;
+    private String delete;
+
     private AbstractBuilder builder;
 
     private BetDAOImpl() {
-        builder = FactoryBuilder.getBuilder(TypeBuilder.BET);
+        this.builder = FactoryBuilder.getBuilder(TypeBuilder.BET);
+        this.selectById = configurationManager.getProperty(SQL_SELECT_BET_BY_ID);
+        this.select = configurationManager.getProperty(SQL_SELECT_BET);
+        this.selectByRaceIdAndBetType = configurationManager.getProperty(SQL_SELECT_BET_BY_RACE_ID_AND_BET_TYPE);
+        this.insert = configurationManager.getProperty(SQL_INSERT_BET);
+        this.update = configurationManager.getProperty(SQL_UPDATE_BET);
+        this.delete = configurationManager.getProperty(SQL_DELETE_BET);
     }
 
     public static BetDAOImpl getInstance() {
@@ -50,7 +65,7 @@ public class BetDAOImpl extends AbstractDAO implements BetDAO {
         queryParams.put(1, id);
         Bet race = null;
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectBetById"), queryParams, true);
+        ResultSet rs = executeQuery(selectById, queryParams, true);
 
         try {
             if (rs.next()) {
@@ -64,7 +79,7 @@ public class BetDAOImpl extends AbstractDAO implements BetDAO {
 
     @Override
     public List<Bet> getAll() throws HorseRaceBetException {
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectBet"), null, true);
+        ResultSet rs = executeQuery(select, null, true);
 
         return getBets(rs);
     }
@@ -76,7 +91,7 @@ public class BetDAOImpl extends AbstractDAO implements BetDAO {
         queryParams.put(2, raceId);
         queryParams.put(3, type);
 
-        ResultSet rs = executeQuery(configurationManager.getProperty("SQL.selectBetByRaceIdAndBetType"), queryParams, true);
+        ResultSet rs = executeQuery(selectByRaceIdAndBetType, queryParams, true);
         return getBets(rs);
     }
 
@@ -84,7 +99,7 @@ public class BetDAOImpl extends AbstractDAO implements BetDAO {
     public void save(Bet bet) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(bet);
 
-        executeQuery(configurationManager.getProperty("SQL.insertBet"), queryParams, false);
+        executeQuery(insert, queryParams, false);
     }
 
     @Override
@@ -92,7 +107,7 @@ public class BetDAOImpl extends AbstractDAO implements BetDAO {
         Map<Integer, Object> queryParams = buildParamsMap(bet);
         queryParams.put(5, bet.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.updateBet"), queryParams, false);
+        executeQuery(update, queryParams, false);
     }
 
     @Override
@@ -100,7 +115,7 @@ public class BetDAOImpl extends AbstractDAO implements BetDAO {
         Map<Integer, Object> queryParams = new HashMap<>();
         queryParams.put(1, bet.getId());
 
-        executeQuery(configurationManager.getProperty("SQL.deleteBet"), queryParams, false);
+        executeQuery(delete, queryParams, false);
     }
 
     private List<Bet> getBets(ResultSet rs) {
@@ -124,7 +139,7 @@ public class BetDAOImpl extends AbstractDAO implements BetDAO {
         queryParams.put(2, bet.getFirstStartingPriceHorseId());
 
         if (bet.getSecondStartingPriceHorseId() == 0) {
-            queryParams.put(3, "NULL");
+            queryParams.put(3, NULL_VALUE);
         } else {
             queryParams.put(3, bet.getSecondStartingPriceHorseId());
         }
