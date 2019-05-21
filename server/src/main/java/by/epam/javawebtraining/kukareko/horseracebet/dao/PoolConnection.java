@@ -32,7 +32,7 @@ public class PoolConnection {
 
     private PoolConnection() {
         this.configurationManager = ConfigurationManager.getInstance();
-        connections = new ArrayBlockingQueue<>(10);
+        connections = new ArrayBlockingQueue<>(8);
         init();
     }
 
@@ -51,7 +51,7 @@ public class PoolConnection {
         try {
             Class.forName(configurationManager.getProperty("driver"));
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 8; i++) {
                 Connection connection = getNewConnection();
                 connections.add(connection);
             }
