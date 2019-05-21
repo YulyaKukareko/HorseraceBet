@@ -39,6 +39,7 @@ class Main extends Component {
     getCurrentUserState = () => {
         axios.get(Config.GET_USER_BY_ID)
             .then((resp) => {
+                debugger;
                 if (resp.data.result) {
                     this.setState({user: resp.data.result, isLoading: false});
                 } else {

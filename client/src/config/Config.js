@@ -56,7 +56,7 @@ const Config = {
     CREATE_USER_BET: BASENAME + "userbet/create",
     GET_USER_BET: BASENAME + "userbet/getByUserId",
 
-    GET_USER_BY_ID: BASENAME + "user/getUserById",
+    GET_USER_BY_ID: BASENAME + "user/getById",
     UPDATE_USER: BASENAME + "user/update",
     USER_GET_ALL: BASENAME + "user/getAll",
     USER_ADDING_BALANCE_MONEY: BASENAME + "user/updateBalance",

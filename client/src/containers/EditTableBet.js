@@ -360,7 +360,7 @@ class EditTableBet extends Component {
                         name: "coefficient",
                         value: this.state.coefficient,
                         placeholder: t('COEFFICIENT'),
-                        validator: this.props.validator.message(t('COEFFICIENT'), this.state.coefficient, 'required|min:1.1,num')
+                        validator: this.props.validator.message(t('COEFFICIENT'), this.state.coefficient, 'required')
                     }]} select={{
                         name: "type",
                         placeholder: "Bet type",

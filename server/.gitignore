@@ -84,6 +84,14 @@ modules.xml
 .idea/misc.xml
 *.ipr
 
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.logs
+*.iml
+
 # Sonarlint plugin
  .idea/sonarlint
 

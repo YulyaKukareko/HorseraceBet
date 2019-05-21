@@ -44,6 +44,7 @@ class SignIn extends Component {
             axios.post(Config.SIGN_IN, json)
                 .then((resp) => {
                     if (resp.data.status === "success") {
+                        debugger;
                         if (resp.data.authorization === "success") {
                             this.setState({userRole: resp.data.role.toLowerCase()});
                         } else {

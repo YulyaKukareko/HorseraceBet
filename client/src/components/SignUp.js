@@ -23,6 +23,7 @@ class SignUp extends React.Component {
             password: '',
             countries: [],
             redirect: false,
+            translate: this.props.t,
             ajaxError: ""
         };
         this.props.validator.hideMessages();
@@ -61,7 +62,7 @@ class SignUp extends React.Component {
                         if (resp.data.status === "success") {
                             this.setState({redirect: true});
                         } else {
-                            this.setState({ajaxError: getLocalizationErrorMessage(resp.data.errorMes)});
+                            this.setState({ajaxError: getLocalizationErrorMessage(this.state.translate, resp.data.errorMes)});
                         }
                     });
             } else {
@@ -91,7 +92,7 @@ class SignUp extends React.Component {
     };
 
     render() {
-        let {t} = this.props;
+        let t = this.state.translate;
 
         if (this.state.redirect === true) {
             return (

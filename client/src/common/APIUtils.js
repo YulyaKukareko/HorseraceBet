@@ -32,6 +32,9 @@ function getLocalizationErrorMessage(translate, serverErrorMes) {
         case Config.INSUFFICIENT_FOUNDS_ERROR:
             errorMes = translate('INSUFFICIENT_FOUNDS_ERROR');
             break;
+        case Config.INCORRECT_COEFFICIENT_ERROR:
+            errorMes = translate('INCORRECT_COEFFICIENT_ERROR');
+            break;
     }
 
     return errorMes;

@@ -217,7 +217,7 @@ class EditTableHorseSP extends Component {
                 </div>
                 {
                     this.props.validator.messageWhenPresent(this.state.ajaxError, {
-                        element: message => <div className="ajax_error">{message}</div>
+                        element: message => <div className="ajax_error_edit_sp">{message}</div>
                     })
                 }
             </React.Fragment>

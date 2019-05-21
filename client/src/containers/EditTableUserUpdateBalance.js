@@ -65,7 +65,7 @@ class EditTableUserUpdateBalance extends Component {
                 </div>
                 {
                     this.props.validator.messageWhenPresent(this.state.ajaxError, {
-                        element: message => <div className="ajax_error">{message}</div>
+                        element: message => <div className="ajax_error_update_user_balance">{message}</div>
                     })
                 }
             </React.Fragment>

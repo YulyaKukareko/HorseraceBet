@@ -839,3 +839,24 @@ blockquote, li, p {
     margin-top: 1vw;
     margin-bottom: 1vw;
 }
+
+.ajax_error_edit_sp {
+    color: red;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.5vw;
+    margin-top: 1vw;
+    margin-left: 68vw;
+    margin-bottom: 1vw;
+}
+
+.ajax_error_update_user_balance {
+    color: red;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.5vw;
+    position: absolute;
+    margin-top: 20vw;
+    margin-left: 20vw;
+    margin-bottom: 1vw;
+}

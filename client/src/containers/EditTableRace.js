@@ -205,7 +205,7 @@ class EditTableRace extends Component {
                                    name: "time",
                                    value: this.state.time,
                                    placeholder: t('TIME'),
-                                   // validator: this.props.validator.message(t('TIME'), this.state.time && moment(this.state.time, 'YYYY-MM-DD HH:mm:ss'), [{after_or_equal: moment()}])
+                                   validator: this.props.validator.message(t('TIME'), this.state.time && moment(this.state.time, 'YYYY-MM-DD HH:mm:ss'), [{after_or_equal: moment()}])
                                }]}
                                select={{
                                    name: "type",
