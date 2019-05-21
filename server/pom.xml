@@ -21,11 +21,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.github.jsimone</groupId>
-      <artifactId>webapp-runner</artifactId>
-      <version>8.5.37.0</version>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
