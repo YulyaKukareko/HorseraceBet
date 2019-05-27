@@ -6,9 +6,11 @@ package by.epam.javawebtraining.kukareko.horseracebet.util.constant;
  */
 public class JSONParamConstant {
 
+    // General JSON params
     public static final String PARAMS_ID = "params.id";
     public static final String CONFIG_JSON_RESULT = "configJSON.result";
 
+    // Request JSON params
     public static final String REQUEST_PARAM_BET_ID = "requestParam.betId";
     public static final String REQUEST_PARAM_RACE_ID = "requestParam.raceId";
     public static final String REQUEST_PARAM_BET_TYPE = "requestParam.betType";
@@ -16,6 +18,7 @@ public class JSONParamConstant {
     public static final String REQUEST_PARAM_PASSWORD = "requestParam.password";
     public static final String REQUEST_PARAM_ADDING_MONEY = "requestParam.addingMoney";
 
+    // Response JSON params
     public static final String RESPONSE_PARAM_NO_RESULT = "responseParam.noResult";
     public static final String RESPONSE_PARAM_STARTING_PRICE_ID = "responseParam.startingPriceId";
     public static final String RESPONSE_PARAM_AUTHORIZATION = "responseParam.authorization";

@@ -39,18 +39,30 @@ public class BetService {
         return service;
     }
 
+    /**
+     * @param bet
+     * @throws HorseRaceBetException
+     */
     public void save(Bet bet) throws HorseRaceBetException {
         validateBetObject(bet);
 
         betDAO.save(bet);
     }
 
+    /**
+     * @param bet
+     * @throws HorseRaceBetException
+     */
     public void delete(Bet bet) throws HorseRaceBetException {
         validateId(bet.getId());
 
         betDAO.delete(bet);
     }
 
+    /**
+     * @param bet
+     * @throws HorseRaceBetException
+     */
     public void update(Bet bet) throws HorseRaceBetException {
         validateBetObject(bet);
         validateId(bet.getId());
@@ -58,10 +70,21 @@ public class BetService {
         betDAO.update(bet);
     }
 
+    /**
+     * @return
+     * @throws HorseRaceBetException
+     */
     public List<Bet> getAll() throws HorseRaceBetException {
         return betDAO.getAll();
     }
 
+    /**
+     * @param raceId
+     * @param type
+     * @param userId
+     * @return
+     * @throws HorseRaceBetException
+     */
     public List<Bet> getByRaceIdAndBetType(long raceId, BetType type, Long userId) throws HorseRaceBetException {
         validateId(raceId);
         validateId(userId);
@@ -69,6 +92,11 @@ public class BetService {
         return betDAO.getByRaceIdAndBetType(raceId, type, userId);
     }
 
+    /**
+     * @param id
+     * @return bet by id
+     * @throws HorseRaceBetException
+     */
     public Bet getById(Long id) throws HorseRaceBetException {
         validateId(id);
 

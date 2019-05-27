@@ -32,6 +32,10 @@ public class ConfigurationManager {
         return instance;
     }
 
+    /**
+     * @param key
+     * @return property from config file
+     */
     public String getProperty(String key) {
         return (String) resourceBundle.getObject(key);
     }

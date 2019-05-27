@@ -42,13 +42,13 @@ public class PoolConnection {
 
     private PoolConnection() {
         this.configurationManager = ConfigurationManager.getInstance();
-        this.connections = new ArrayBlockingQueue<>(8);
+        this.connectionTimeout = Integer.parseInt(configurationManager.getProperty(CONNECT_POOL_TIMEOUT));
+        this.poolConnectionSize = Integer.parseInt(configurationManager.getProperty(DB_POOL_CONNECTION_SIZE));
+        this.connections = new ArrayBlockingQueue<>(poolConnectionSize);
         this.driverDB = configurationManager.getProperty(DRIVER);
         this.urlDB = configurationManager.getProperty(DB_CONFIG_URL);
         this.userDB = configurationManager.getProperty(DB_CONFIG_USER);
         this.passwordDB = configurationManager.getProperty(DB_CONFIG_PASSWORD);
-        this.connectionTimeout = Integer.parseInt(configurationManager.getProperty(CONNECT_POOL_TIMEOUT));
-        this.poolConnectionSize = Integer.parseInt(configurationManager.getProperty(DB_POOL_CONNECTION_SIZE));
         init();
     }
 
@@ -67,7 +67,7 @@ public class PoolConnection {
         try {
             Class.forName(driverDB);
 
-            for (int i = 0; i < 8; i++) {
+            for (int i = 0; i < poolConnectionSize; i++) {
                 Connection connection = getNewConnection();
                 connections.add(connection);
             }
@@ -76,6 +76,9 @@ public class PoolConnection {
         }
     }
 
+    /**
+     * @return new Connection
+     */
     public final Connection getConnection() {
         Connection conn = null;
         try {
@@ -100,6 +103,11 @@ public class PoolConnection {
         return connection;
     }
 
+    /**
+     * Return connection to pool
+     *
+     * @param connection
+     */
     public void releaseConnection(Connection connection) {
         try {
             connections.put(connection);

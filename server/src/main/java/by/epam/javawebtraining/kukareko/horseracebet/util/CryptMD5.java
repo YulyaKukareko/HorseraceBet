@@ -21,6 +21,10 @@ public class CryptMD5 {
         configurationManager = ConfigurationManager.getInstance();
     }
 
+    /**
+     * @param pass
+     * @return hashed string
+     */
     public static String cryptWithMD5(String pass) {
         StringBuilder sb = new StringBuilder();
 

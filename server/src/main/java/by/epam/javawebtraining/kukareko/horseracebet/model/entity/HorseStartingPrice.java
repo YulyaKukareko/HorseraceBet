@@ -23,34 +23,58 @@ public class HorseStartingPrice {
         this.sp = sp;
     }
 
+    /**
+     * @return horse starting price id
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * @param id
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * @return horse starting price race id
+     */
     public long getRaceId() {
         return raceId;
     }
 
+    /**
+     * @param raceId
+     */
     public void setRaceId(long raceId) {
         this.raceId = raceId;
     }
 
+    /**
+     * @return horse stating price id
+     */
     public long getHorseId() {
         return horseId;
     }
 
+    /**
+     * @param horseId
+     */
     public void setHorseId(long horseId) {
         this.horseId = horseId;
     }
 
+    /**
+     * @return stating price
+     */
     public float getSp() {
         return sp;
     }
 
+    /**
+     * @param sp
+     */
     public void setSp(float sp) {
         this.sp = sp;
     }

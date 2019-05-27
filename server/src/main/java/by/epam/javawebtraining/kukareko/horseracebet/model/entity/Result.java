@@ -23,34 +23,58 @@ public class Result {
         this.horseId = horseId;
     }
 
+    /**
+     * @return id result
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * @param id
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * @return race id of
+     */
     public long getRaceId() {
         return raceId;
     }
 
+    /**
+     * @param raceId
+     */
     public void setRaceId(long raceId) {
         this.raceId = raceId;
     }
 
+    /**
+     * @return horse id
+     */
     public long getHorseId() {
         return horseId;
     }
 
+    /**
+     * @param horseId
+     */
     public void setHorseId(long horseId) {
         this.horseId = horseId;
     }
 
+    /**
+     * @return result place
+     */
     public int getPlace() {
         return place;
     }
 
+    /**
+     * @param place
+     */
     public void setPlace(int place) {
         this.place = place;
     }

@@ -38,18 +38,30 @@ public class HorseStartingPriceService {
         return service;
     }
 
+    /**
+     * @param sp
+     * @throws HorseRaceBetException
+     */
     public void save(HorseStartingPrice sp) throws HorseRaceBetException {
         validateHorseStartingPriceObject(sp);
 
         spDAO.save(sp);
     }
 
+    /**
+     * @param sp
+     * @throws HorseRaceBetException
+     */
     public void delete(HorseStartingPrice sp) throws HorseRaceBetException {
         validateId(sp.getId());
 
         spDAO.delete(sp);
     }
 
+    /**
+     * @param sp
+     * @throws HorseRaceBetException
+     */
     public void update(HorseStartingPrice sp) throws HorseRaceBetException {
         validateHorseStartingPriceObject(sp);
         validateId(sp.getId());
@@ -57,28 +69,55 @@ public class HorseStartingPriceService {
         spDAO.update(sp);
     }
 
+    /**
+     * @return all horse starting prices
+     * @throws HorseRaceBetException
+     */
     public List<HorseStartingPrice> getAll() throws HorseRaceBetException {
         return spDAO.getAll();
     }
 
+    /**
+     * @param id
+     * @return horse starting price by id
+     * @throws HorseRaceBetException
+     */
     public HorseStartingPrice getById(Long id) throws HorseRaceBetException {
         validateId(id);
 
         return spDAO.getById(id);
     }
 
+    /**
+     * @return horse starting prices of first horses bet
+     * @throws HorseRaceBetException
+     */
     public List<HorseStartingPrice> getJoinFirstHorsesBet() throws HorseRaceBetException {
         return spDAO.getJoinFirstHorsesBet();
     }
 
+    /**
+     * @return horse starting prices of second horses bet
+     * @throws HorseRaceBetException
+     */
     public List<HorseStartingPrice> getJoinSecondHorsesBet() throws HorseRaceBetException {
         return spDAO.getJoinSecondHorsesBet();
     }
 
+    /**
+     * @param raceId
+     * @return horse starting prices by race id
+     * @throws HorseRaceBetException
+     */
     public List<HorseStartingPrice> getByRaceId(Long raceId) throws HorseRaceBetException {
         return spDAO.getByRaceId(raceId);
     }
 
+    /**
+     * @param raceId
+     * @return count horses participating in race
+     * @throws HorseRaceBetException
+     */
     public Integer getCountByRaceId(Long raceId) throws HorseRaceBetException {
         return spDAO.getCountByRaceId(raceId);
     }

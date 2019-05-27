@@ -48,10 +48,20 @@ public class UserService {
         return service;
     }
 
+    /**
+     * @return all users
+     * @throws HorseRaceBetException
+     */
     public List<User> getAll() throws HorseRaceBetException {
         return userDAO.getAll();
     }
 
+    /**
+     * @param email
+     * @param password
+     * @return whether there is a such user
+     * @throws HorseRaceBetException
+     */
     public User checkUser(String email, String password) throws HorseRaceBetException {
         validateEmail(email);
         validatePassword(password);
@@ -59,6 +69,10 @@ public class UserService {
         return userDAO.getByLoginAndPassword(email, password);
     }
 
+    /**
+     * @param user
+     * @throws HorseRaceBetException
+     */
     public void save(User user) throws HorseRaceBetException {
         validateUserObject(user);
 
@@ -71,12 +85,22 @@ public class UserService {
         }
     }
 
+    /**
+     * @param id
+     * @return user by id
+     * @throws HorseRaceBetException
+     */
     public User getUserById(Long id) throws HorseRaceBetException {
         validateId(id);
 
         return userDAO.getById(id);
     }
 
+    /**
+     * @param id
+     * @param betMoney
+     * @throws HorseRaceBetException
+     */
     public void addUserBalanceMoney(Long id, BigDecimal betMoney) throws HorseRaceBetException {
         validateId(id);
         validateMoney(betMoney);
@@ -84,6 +108,10 @@ public class UserService {
         userDAO.updateBalance(id, betMoney);
     }
 
+    /**
+     * @param user
+     * @throws HorseRaceBetException
+     */
     public void update(User user) throws HorseRaceBetException {
         validateUserObject(user);
         validateId(user.getId());

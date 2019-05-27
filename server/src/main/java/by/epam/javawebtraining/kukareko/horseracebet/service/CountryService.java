@@ -37,10 +37,20 @@ public class CountryService {
         return service;
     }
 
+    /**
+     * @return all countries
+     * @throws HorseRaceBetException
+     */
     public List<Country> getAll() throws HorseRaceBetException {
         return countryDAO.getAll();
     }
 
+    /**
+     *
+     * @param id
+     * @return country by id
+     * @throws HorseRaceBetException
+     */
     public Country getById(Long id) throws HorseRaceBetException {
         validateId(id);
 

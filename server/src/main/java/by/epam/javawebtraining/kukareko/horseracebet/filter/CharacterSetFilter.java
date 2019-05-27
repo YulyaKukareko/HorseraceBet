@@ -13,9 +13,12 @@ import java.io.IOException;
 public class CharacterSetFilter implements Filter {
 
     private String encoding;
+    private ConfigurationManager configurationManager;
 
     @Override
     public void init(FilterConfig filterConfig) {
+        this.configurationManager = ConfigurationManager.getInstance();
+        this.encoding = configurationManager.getProperty(GeneralConstants.ENCODING);
     }
 
     @Override
@@ -23,7 +26,7 @@ public class CharacterSetFilter implements Filter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain next) throws IOException, ServletException {
-        request.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding(encoding);
         next.doFilter(request, response);
     }
 }

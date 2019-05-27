@@ -19,18 +19,30 @@ public class Country {
         this.name = name;
     }
 
+    /**
+     * @return id of country
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * @param id
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * @return name of country
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }

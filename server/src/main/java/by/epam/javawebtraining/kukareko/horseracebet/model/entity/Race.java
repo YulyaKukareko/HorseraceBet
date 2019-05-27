@@ -31,58 +31,101 @@ public class Race {
         this.time = time;
     }
 
+    /**
+     * @return race id
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * @param id
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * @return race name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return country id of current race
+     */
     public long getCountryId() {
         return countryId;
     }
 
+    /**
+     * @param countryId
+     */
     public void setCountryId(long countryId) {
         this.countryId = countryId;
     }
 
+    /**
+     * @return distance of race
+     */
     public double getDistance() {
         return distance;
     }
 
+    /**
+     * @param distance
+     */
     public void setDistance(double distance) {
         this.distance = distance;
     }
 
+    /**
+     * @return purse of race
+     */
     public BigDecimal getPurse() {
         return purse;
     }
 
+    /**
+     * @param purse
+     */
     public void setPurse(BigDecimal purse) {
         this.purse = purse;
     }
 
+    /**
+     * @return race type of race
+     */
     public RaceType getType() {
         return type;
     }
 
+    /**
+     * @param type
+     */
     public void setType(RaceType type) {
         this.type = type;
     }
 
+    /**
+     * @return time of race
+     */
     public Timestamp getTime() {
         return time;
     }
 
+    /**
+     *
+     * @param time
+     */
     public void setTime(Timestamp time) {
         this.time = time;
     }

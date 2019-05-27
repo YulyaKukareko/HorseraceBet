@@ -13,5 +13,12 @@ import java.util.List;
  */
 public interface BetDAO extends DAO<Bet, Long> {
 
+    /**
+     * @param raceId
+     * @param type
+     * @param userId
+     * @return bets by certain race and bet type
+     * @throws HorseRaceBetException
+     */
     List<Bet> getByRaceIdAndBetType(long raceId, BetType type, long userId) throws HorseRaceBetException;
 }

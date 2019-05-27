@@ -14,6 +14,10 @@ public interface GetParams {
 
     Logger LOGGER = Logger.getLogger(LogConstant.JSON_PARSER_LOG);
 
+    /**
+     * @param request
+     * @return parse JSON parameters
+     */
     default String getParam(HttpServletRequest request) {
         StringBuilder jb = new StringBuilder();
         String line;

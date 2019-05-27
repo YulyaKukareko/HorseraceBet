@@ -8,6 +8,7 @@ public class SQLConstant {
 
     public static final String NULL_VALUE = "NULL";
 
+    // Bet entity SQL operations
     public static final String SQL_DELETE_BET = "SQL.deleteBet";
     public static final String SQL_UPDATE_BET = "SQL.updateBet";
     public static final String SQL_INSERT_BET = "SQL.insertBet";
@@ -15,12 +16,14 @@ public class SQLConstant {
     public static final String SQL_SELECT_BET = "SQL.selectBet";
     public static final String SQL_SELECT_BET_BY_ID = "SQL.selectBetById";
 
+    // Country entity SQL operations
     public static final String SQL_SELECT_COUNTRY = "SQL.selectCountry";
     public static final String SQL_INSERT_COUNTRY = "SQL.insertCountry";
     public static final String SQL_UPDATE_COUNTRY = "SQL.updateCountry";
     public static final String SQL_DELETE_COUNTRY = "SQL.deleteCountry";
     public static final String SQL_SELECT_COUNTRY_BY_ID = "SQL.selectCountryById";
 
+    // Horse entity SQL operations
     public static final String SQL_SELECT_HORSE_BY_ID = "SQL.selectHorseById";
     public static final String SQL_SELECT_HORSE = "SQL.selectHorse";
     public static final String SQL_INSERT_HORSE = "SQL.insertHorse";
@@ -33,6 +36,7 @@ public class SQLConstant {
     public static final String SQL_SELECT_HORSES_JOIN_HORSE_STARTING_PRICE_BY_RACE_ID = "SQL.selectHorsesJoinHorseStartingPriceByRaceId";
     public static final String SQL_SELECT_HORSES_JOIN_HORSE_STARTING_PRICE_EXCLUDING_BY_RACE_ID = "SQL.selectHorsesJoinHorseStartingPriceExcludingByRaceId";
 
+    // Horse starting price entity SQL operations
     public static final String SQL_SELECT_HORSE_STARTING_PRICE_BY_ID = "SQL.selectHorseStartingPriceById";
     public static final String SQL_SELECT_STARTING_PRICE = "SQL.selectStartingPrice";
     public static final String SQL_INSERT_HORSE_STARTING_PRICE = "SQL.insertHorseStartingPrice";
@@ -43,6 +47,7 @@ public class SQLConstant {
     public static final String SQL_SELECT_STARTING_PRICE_BY_RACE_ID = "SQL.selectStartingPriceByRaceId";
     public static final String SQL_SELECT_STARTING_PRICE_COUNT_BY_RACE_ID = "SQL.selectStartingPriceCountByRaceId";
 
+    // Race entity SQL operations
     public static final String SQL_SELECT_RACE_BY_ID = "SQL.selectRaceById";
     public static final String SQL_SELECT_RACE = "SQL.selectRace";
     public static final String SQL_INSERT_RACE = "SQL.insertRace";
@@ -55,6 +60,7 @@ public class SQLConstant {
     public static final String SQL_SELECT_RACE_NOT_JOIN_RESULT = "SQL.selectRaceNotJoinResult";
     public static final String SQL_SELECT_COMPLETED_RACE_JOIN_RESULT = "SQL.selectCompletedRaceJoinResult";
 
+    // Result entity SQL operations
     public static final String SQL_SELECT_RESULT_BY_ID = "SQL.selectResultById";
     public static final String SQL_SELECT_RESULT = "SQL.selectResult";
     public static final String SQL_INSERT_RESULT = "SQL.insertResult";
@@ -62,6 +68,7 @@ public class SQLConstant {
     public static final String SQL_DELETE_RESULT = "SQL.deleteResult";
     public static final String SQL_SELECT_RESULT_BY_RACE_ID = "SQL.selectResultByRaceId";
 
+    // User entity SQL operations
     public static final String SQL_SELECT_USER_BY_ID = "SQL.selectUserById";
     public static final String SQL_INSERT_USER = "SQL.insertUser";
     public static final String SQL_SELECT_USER = "SQL.selectUser";
@@ -71,6 +78,7 @@ public class SQLConstant {
     public static final String SQL_CHECK_EXISTS_EMAIL = "SQL.checkExistsEmail";
     public static final String SQL_ADDING_USER_BALANCE_MONEY = "SQL.addingUserBalanceMoney";
 
+    // User bet entity SQL operations
     public static final String SQL_SELECT_USER_BET_BY_ID = "SQL.selectUserBetById";
     public static final String SQL_SELECT_USER_BET = "SQL.selectUserBet";
     public static final String SQL_INSERT_USER_BET = "SQL.insertUserBet";

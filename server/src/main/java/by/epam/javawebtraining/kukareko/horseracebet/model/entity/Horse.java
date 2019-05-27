@@ -25,42 +25,72 @@ public class Horse {
         this.name = name;
     }
 
+    /**
+     * @return horse id
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * @param id
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * @return horse name
+     */
     public String getTrainer() {
         return trainer;
     }
 
+    /**
+     * @param trainer
+     */
     public void setTrainer(String trainer) {
         this.trainer = trainer;
     }
 
+    /**
+     * @return jockey trainer
+     */
     public String getJockey() {
         return jockey;
     }
 
+    /**
+     * @param jockey
+     */
     public void setJockey(String jockey) {
         this.jockey = jockey;
     }
 
+    /**
+     * @return horse weight
+     */
     public float getWeight() {
         return weight;
     }
 
+    /**
+     * @param weight
+     */
     public void setWeight(float weight) {
         this.weight = weight;
     }
 
+    /**
+     * @return horse name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name
+     */
     public void setName(String name) {
         this.name = name;
     }

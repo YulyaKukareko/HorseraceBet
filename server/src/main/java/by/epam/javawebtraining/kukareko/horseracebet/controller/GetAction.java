@@ -13,7 +13,10 @@ import java.util.regex.Pattern;
  */
 public interface GetAction {
 
-
+    /**
+     * @param request
+     * @return particular action
+     */
     default String getAction(HttpServletRequest request) {
         ConfigurationManager configurationManager = ConfigurationManager.getInstance();
         String defineActionRegExp = configurationManager.getProperty(RegexpConstant.DEFINE_ACTION_REG_EXP);

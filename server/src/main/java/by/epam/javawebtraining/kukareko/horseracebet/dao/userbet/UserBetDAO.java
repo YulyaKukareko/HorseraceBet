@@ -11,5 +11,11 @@ import java.util.List;
  * @version 1.0 28 Apr 2019
  */
 public interface UserBetDAO extends DAO<UserBet, Long> {
+
+    /**
+     * @param userId
+     * @return user bets
+     * @throws HorseRaceBetException
+     */
     List<UserBet> getByUserId(long userId) throws HorseRaceBetException;
 }

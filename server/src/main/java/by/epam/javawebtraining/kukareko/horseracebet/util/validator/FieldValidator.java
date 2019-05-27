@@ -21,14 +21,26 @@ public class FieldValidator {
         configurationManager = ConfigurationManager.getInstance();
     }
 
+    /**
+     * @param data
+     * @throws IncorrectInputParamException
+     */
     public static void validateEmail(String data) throws IncorrectInputParamException {
         validateString(data, EMAIL_REG_EXP, INCORRECT_EMAIL_MESSAGE);
     }
 
+    /**
+     * @param data
+     * @throws IncorrectInputParamException
+     */
     public static void validatePassword(String data) throws IncorrectInputParamException {
         validateString(data, PASSWORD_REG_EXP, INCORRECT_PASSWORD_MESSAGE);
     }
 
+    /**
+     * @param data
+     * @throws IncorrectInputParamException
+     */
     public static void validateName(String data) throws IncorrectInputParamException {
         validateString(data, NAME_REG_EXP, INPUT_PARAMETERS_INCORRECT_MESSAGE);
     }
@@ -42,6 +54,10 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * @param data
+     * @throws IncorrectInputParamException
+     */
     public static void validateId(long data) throws IncorrectInputParamException {
         String incorrectParamsMes = configurationManager.getProperty(INPUT_PARAMETERS_INCORRECT_MESSAGE);
 
@@ -50,10 +66,18 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * @param data
+     * @throws IncorrectInputParamException
+     */
     public static void validateSecondHorseId(long data) throws IncorrectInputParamException {
         validateNumber(data, INPUT_PARAMETERS_INCORRECT_MESSAGE);
     }
 
+    /**
+     * @param data
+     * @throws IncorrectInputParamException
+     */
     public static void validateMoney(BigDecimal data) throws IncorrectInputParamException {
         String incorrectSumMes = configurationManager.getProperty(INCORRECT_SUM_MESSAGE);
 
@@ -62,14 +86,26 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * @param data
+     * @throws IncorrectInputParamException
+     */
     public static void validateCoefficient(float data) throws IncorrectInputParamException {
         validateNumber(data, INCORRECT_COEFFICIENT_MESSAGE);
     }
 
+    /**
+     * @param data
+     * @throws IncorrectInputParamException
+     */
     public static void validateWeightOrDistance(float data) throws IncorrectInputParamException {
         validateNumber(data, INPUT_PARAMETERS_INCORRECT_MESSAGE);
     }
 
+    /**
+     * @param data
+     * @throws IncorrectInputParamException
+     */
     public static void validatePlace(int data) throws IncorrectInputParamException {
         validateNumber(data, INCORRECT_PLACE_NUMBER_MESSAGE);
     }
@@ -82,6 +118,10 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * @param time
+     * @throws IncorrectInputParamException
+     */
     public static void validateRaceTime(Timestamp time) throws IncorrectInputParamException {
         String incorrectTimeMes = configurationManager.getProperty(INCORRECT_TIME_MESSAGE);
 
@@ -90,6 +130,10 @@ public class FieldValidator {
         }
     }
 
+    /**
+     * @param obj
+     * @throws IncorrectInputParamException
+     */
     public static void validateEnum(Object obj) throws IncorrectInputParamException {
         String incorrectParamsMes = configurationManager.getProperty(INPUT_PARAMETERS_INCORRECT_MESSAGE);
 

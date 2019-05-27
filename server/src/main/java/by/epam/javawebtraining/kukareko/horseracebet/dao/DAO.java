@@ -10,13 +10,34 @@ import java.util.List;
  */
 public interface DAO<T, K> {
 
+    /**
+     * @param id
+     * @return
+     * @throws HorseRaceBetException
+     */
     T getById(K id) throws HorseRaceBetException;
 
+    /**
+     * @return
+     * @throws HorseRaceBetException
+     */
     List<T> getAll() throws HorseRaceBetException;
 
+    /**
+     * @param entity
+     * @throws HorseRaceBetException
+     */
     void save(T entity) throws HorseRaceBetException;
 
+    /**
+     * @param entity
+     * @throws HorseRaceBetException
+     */
     void update(T entity) throws HorseRaceBetException;
 
+    /**
+     * @param entity
+     * @throws HorseRaceBetException
+     */
     void delete(T entity) throws HorseRaceBetException;
 }

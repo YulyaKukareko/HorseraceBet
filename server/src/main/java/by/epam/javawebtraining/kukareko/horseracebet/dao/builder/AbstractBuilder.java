@@ -17,5 +17,9 @@ public abstract class AbstractBuilder<T> {
         LOGGER = Logger.getLogger(LogConstant.BUILDER_LOG);
     }
 
+    /**
+     * @param rs
+     * @return
+     */
     public abstract T getEntity(ResultSet rs);
 }

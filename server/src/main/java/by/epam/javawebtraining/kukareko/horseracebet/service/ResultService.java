@@ -38,12 +38,21 @@ public class ResultService {
         return service;
     }
 
+    /**
+     * @param result
+     * @throws HorseRaceBetException
+     */
     public void save(Result result) throws HorseRaceBetException {
         validateResultObj(result);
 
         resultDAO.save(result);
     }
 
+    /**
+     * @param raceId
+     * @return results by race id
+     * @throws HorseRaceBetException
+     */
     public List<Result> getByRaceId(Long raceId) throws HorseRaceBetException {
         validateId(raceId);
 

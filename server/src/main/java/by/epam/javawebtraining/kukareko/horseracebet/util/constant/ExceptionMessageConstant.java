@@ -17,4 +17,5 @@ public class ExceptionMessageConstant {
     public static final String INPUT_PARAMETERS_INCORRECT_MESSAGE = "inputParametersIncorrectMessage";
     public static final String DATABASE_NOT_RESPONDING_MESSAGE = "databaseNotRespondingMessage";
     public static final String TRANSACTION_NOT_COMPLETED_MESSAGE = "transactionNotCompletedMessage";
+    public static final String INSUFFICIENT_FUNDS_MESSAGE = "insufficientFundsMessage";
 }

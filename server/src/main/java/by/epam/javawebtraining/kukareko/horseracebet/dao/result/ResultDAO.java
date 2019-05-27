@@ -11,5 +11,11 @@ import java.util.List;
  * @version 1.0 24 Apr 2019
  */
 public interface ResultDAO extends DAO<Result, Long> {
+
+    /**
+     * @param raceId
+     * @return results by race id
+     * @throws HorseRaceBetException
+     */
     List<Result> getByRaceId(long raceId) throws HorseRaceBetException;
 }

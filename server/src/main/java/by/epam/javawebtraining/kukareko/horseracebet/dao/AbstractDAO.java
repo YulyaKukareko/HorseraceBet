@@ -39,6 +39,13 @@ public class AbstractDAO {
         this.databaseNotRespondingMes = configurationManager.getProperty(ExceptionMessageConstant.DATABASE_NOT_RESPONDING_MESSAGE);
     }
 
+    /**
+     * @param procedureName
+     * @param params
+     * @param isExecuteQuery
+     * @return
+     * @throws TransactionNotCompleteException
+     */
     protected final ResultSet executeProcedure(String procedureName, Map<Integer, Object> params, boolean isExecuteQuery)
             throws TransactionNotCompleteException {
         ResultSet result;
@@ -56,6 +63,15 @@ public class AbstractDAO {
         return result;
     }
 
+    /**
+     *
+     * @param query
+     * @param params
+     * @param isExecuteQuery
+     * @return execution result query
+     * @throws IncorrectInputParamException
+     * @throws DatabaseConnectionException
+     */
     protected final ResultSet executeQuery(String query, Map<Integer, Object> params, boolean isExecuteQuery)
             throws IncorrectInputParamException, DatabaseConnectionException {
         ResultSet result;

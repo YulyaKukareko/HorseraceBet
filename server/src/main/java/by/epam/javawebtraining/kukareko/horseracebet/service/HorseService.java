@@ -38,18 +38,30 @@ public class HorseService {
         return service;
     }
 
+    /**
+     * @param horse
+     * @throws HorseRaceBetException
+     */
     public void save(Horse horse) throws HorseRaceBetException {
         validateHorseObject(horse);
 
         horseDAO.save(horse);
     }
 
+    /**
+     * @param horse
+     * @throws HorseRaceBetException
+     */
     public void delete(Horse horse) throws HorseRaceBetException {
         validateId(horse.getId());
 
         horseDAO.delete(horse);
     }
 
+    /**
+     * @param horse
+     * @throws HorseRaceBetException
+     */
     public void update(Horse horse) throws HorseRaceBetException {
         validateHorseObject(horse);
         validateId(horse.getId());
@@ -57,40 +69,76 @@ public class HorseService {
         horseDAO.update(horse);
     }
 
+    /**
+     * @return all horses
+     * @throws HorseRaceBetException
+     */
     public List<Horse> getAll() throws HorseRaceBetException {
         return horseDAO.getAll();
     }
 
+    /**
+     * @param id
+     * @return horse by id
+     * @throws HorseRaceBetException
+     */
     public Horse getById(Long id) throws HorseRaceBetException {
         validateId(id);
 
         return horseDAO.getById(id);
     }
 
+    /**
+     * @return first horses of bets
+     * @throws HorseRaceBetException
+     */
     public List<Horse> getJoinFirstBetAndHorseStartingPrice() throws HorseRaceBetException {
         return horseDAO.getJoinFirstHorseBetAndHorseStartingPrice();
     }
 
+    /**
+     * @return second horses of bets
+     * @throws HorseRaceBetException
+     */
     public List<Horse> getJoinSecondBetAndHorseStartingPrice() throws HorseRaceBetException {
         return horseDAO.getJoinSecondHorseBetAndHorseStartingPrice();
     }
 
+    /**
+     * @param raceId
+     * @return horses by race id
+     * @throws HorseRaceBetException
+     */
     public List<Horse> getJoinHorseStartingPriceByRaceId(Long raceId) throws HorseRaceBetException {
         validateId(raceId);
 
         return horseDAO.getJoinHorseStartingPriceByRaceId(raceId);
     }
 
+    /**
+     * @param raceId
+     * @return horses not participating in the race
+     * @throws HorseRaceBetException
+     */
     public List<Horse> getJoinHorseStartingPriceExcludingByRaceId(Long raceId) throws HorseRaceBetException {
         validateId(raceId);
 
         return horseDAO.getJoinHorseStartingPriceExcludingByRaceId(raceId);
     }
 
+    /**
+     * @return horses which participating in races
+     * @throws HorseRaceBetException
+     */
     public List<Horse> getJoinHorseStartingPrice() throws HorseRaceBetException {
         return horseDAO.getJoinHorseStartingPrice();
     }
 
+    /**
+     * @param startingPriceId
+     * @return horse by starting price id
+     * @throws HorseRaceBetException
+     */
     public Horse getJoinHorseStartingPriceByStartingPriceId(Long startingPriceId) throws HorseRaceBetException {
         validateId(startingPriceId);
 

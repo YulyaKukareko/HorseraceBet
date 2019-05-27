@@ -34,66 +34,114 @@ public class User implements Serializable {
         this.role = role;
     }
 
+    /**
+     * @return user id
+     */
     public long getId() {
         return id;
     }
 
+    /**
+     * @param id
+     */
     public void setId(long id) {
         this.id = id;
     }
 
+    /**
+     * @return email user
+     */
     public String getEmail() {
         return email;
     }
 
+    /**
+     * @param email
+     */
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * @return country id
+     */
     public long getCountryId() {
         return countryId;
     }
 
+    /**
+     * @param countryId
+     */
     public void setCountryId(long countryId) {
         this.countryId = countryId;
     }
 
+    /**
+     * @return user balance
+     */
     public BigDecimal getBalance() {
         return balance;
     }
 
+    /**
+     * @param balance
+     */
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
+    /**
+     * @return user role
+     */
     public Role getRole() {
         return role;
     }
 
+    /**
+     * @param role
+     */
     public void setRole(Role role) {
         this.role = role;
     }
 
+    /**
+     * @return user first name
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * @param firstName
+     */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
+    /**
+     * @return user last name
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * @param lastName
+     */
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
+    /**
+     * @return user password
+     */
     public String getPassword() {
         return password;
     }
 
+    /**
+     * @param password
+     */
     public void setPassword(String password) {
         this.password = password;
     }

@@ -13,9 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 public interface Command {
 
     /**
-     *
      * @param request
-     * @return
+     * @return JSON object
      * @throws HorseRaceBetException
      */
     JSONObject execute(HttpServletRequest request) throws HorseRaceBetException;
