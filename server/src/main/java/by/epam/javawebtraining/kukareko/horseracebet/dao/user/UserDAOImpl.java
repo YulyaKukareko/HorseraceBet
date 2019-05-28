@@ -80,6 +80,8 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         String cryptoPassword = CryptMD5.cryptWithMD5(user.getPassword());
         user.setPassword(cryptoPassword);
         Map<Integer, Object> queryParams = buildParamsMap(user);
+        queryParams.put(6, user.getPassword());
+        queryParams.put(7, user.getRole());
 
         executeQuery(insert, queryParams, false);
     }
@@ -102,7 +104,7 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
     @Override
     public void update(User user) throws HorseRaceBetException {
         Map<Integer, Object> queryParams = buildParamsMap(user);
-        queryParams.put(7, user.getId());
+        queryParams.put(6, user.getId());
 
         executeQuery(update, queryParams, false);
     }
@@ -171,8 +173,6 @@ public class UserDAOImpl extends AbstractDAO implements UserDAO {
         queryParams.put(3, user.getLastName());
         queryParams.put(4, user.getCountryId());
         queryParams.put(5, user.getBalance());
-        queryParams.put(6, user.getPassword());
-        queryParams.put(7, user.getRole());
 
         return queryParams;
     }
