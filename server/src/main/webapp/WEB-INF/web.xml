@@ -25,11 +25,6 @@
     <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
 
-  <error-page>
-    <error-code>404</error-code>
-    <location>/index.jsp</location>
-  </error-page>
-
   <taglib>
     <taglib-uri>customtags</taglib-uri>
     <taglib-location>/WEB-INF/tld/custom.tld</taglib-location>
